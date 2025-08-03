@@ -1,5 +1,6 @@
 package;
 
+import menus.MainMenuState;
 import flixel.text.FlxText;
 import backend.util.PathUtil;
 import flixel.system.FlxAssets;
@@ -13,6 +14,7 @@ class InitState extends FlxState
 		super.create();
 
         configureFlixelSettings();
+        FlxG.switchState(() -> new MainMenuState());
 	}
 
     function configureFlixelSettings():Void
