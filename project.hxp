@@ -185,7 +185,7 @@ class Project extends HXProject
 		this.window.width = (!isMobile()) ? 1280 : 0;
 		this.window.height = (!isMobile()) ? 720 : 0;
 		this.window.background = 0xFF000000;
-		this.window.fullscreen = true;
+		this.window.fullscreen = false;
 		this.window.resizable = isWeb();
 		this.window.orientation = (isDesktop() || isMobile()) ? Orientation.LANDSCAPE : Orientation.AUTO;
 		this.window.hardware = true;
