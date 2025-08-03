@@ -415,6 +415,9 @@ class Project extends HXProject
 		// Add font assets
 		addAssetPath('assets/fonts', 'assets/fonts', 'default', ['*.ttf'], []);
 
+		// Add the entity assets
+		addAssetPath('assets/entities', 'assets/entities', 'default', ['*.png', '*.xml'], []);
+
 		// Add shared image assets
 		addAssetPath('assets/shared/images', 'assets/shared/images', 'default', ['*.png'], []);
 
