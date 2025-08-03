@@ -458,7 +458,7 @@ final class FlixelUtil
 	public static function closeGame(sysShutdown:Bool = true):Void
 	{
 		// Log info
-		LoggerUtil.log('SHUTTING DOWN STARCORE', INFO, false);
+		LoggerUtil.log('SHUTTING DOWN ANTLANTIS', INFO, false);
 		// Save all of the user's data
 		SaveUtil.saveAll();
 		// Shutdown Discord rich presence

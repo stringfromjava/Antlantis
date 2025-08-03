@@ -1,5 +1,10 @@
 package;
 
+import backend.util.LoggerUtil;
+import flixel.tweens.FlxTween;
+import flixel.tweens.FlxTween.FlxTweenType;
+import flixel.math.FlxMath;
+import backend.util.CacheUtil;
 import backend.util.FlixelUtil;
 import backend.util.SaveUtil;
 import lime.app.Application;
@@ -17,6 +22,7 @@ class InitState extends FlxState
 	{
 		super.create();
 
+        LoggerUtil.initialize();
         ClientPrefs.loadAll();
         configureFlixelSettings();
         addEventListeners();
@@ -26,6 +32,7 @@ class InitState extends FlxState
 
     function configureFlixelSettings():Void
     {
+        FlxG.autoPause = false;
         FlxG.mouse.useSystemCursor = true;
         FlxAssets.FONT_DEFAULT = PathUtil.ofFont('Orange Kid');
         FlxAssets.defaultSoundExtension = #if web 'mp3' #else 'ogg' #end;
@@ -33,6 +40,41 @@ class InitState extends FlxState
 
     function addEventListeners():Void
     {
+        #if desktop
+		// Maximize/Minimize volume when the window is gets/loses focus
+		Application.current.window.onFocusIn.add(() ->
+		{
+			// Bring the volume back up when the window is focused again
+			if (ClientPrefs.getOption('minimizeVolume') && !CacheUtil.isWindowFocused)
+			{
+				// Set back to one decimal place (0.1) when the screen gains focus again
+				// (note that if the user had the volume all the way down, it will be set to zero)
+				FlxG.sound.volume = (!(Math.abs(FlxG.sound.volume) < FlxMath.EPSILON)) ? 0.1 : 0;
+				CacheUtil.isWindowFocused = true;
+				// Set the volume back to the last volume used
+				FlxTween.num(FlxG.sound.volume, CacheUtil.lastVolumeUsed, 0.3, {type: FlxTweenType.ONESHOT}, (v:Float) ->
+				{
+					FlxG.sound.volume = v;
+				});
+			}
+		});
+		Application.current.window.onFocusOut.add(() ->
+		{
+			// Minimize the volume when the window loses focus
+			if (ClientPrefs.getOption('minimizeVolume') && CacheUtil.isWindowFocused)
+			{
+				// Set the last volume used to the current volume
+				CacheUtil.lastVolumeUsed = FlxG.sound.volume;
+				CacheUtil.isWindowFocused = false;
+				// Tween the volume to 0.05
+				FlxTween.num(FlxG.sound.volume, (!(Math.abs(FlxG.sound.volume) < FlxMath.EPSILON)) ? 0.05 : 0, 0.3, {type: FlxTweenType.ONESHOT}, (v:Float) ->
+				{
+					FlxG.sound.volume = v;
+				});
+			}
+		});
+		#end
+
         Application.current.window.onClose.add(() ->
         {
             FlixelUtil.closeGame(false);
