@@ -1,5 +1,6 @@
 package menus;
 
+import flixel.group.FlxSpriteGroup;
 import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
 import flixel.util.FlxTimer;
@@ -12,6 +13,8 @@ import flixel.util.FlxColor;
 
 class MainMenuState extends FlxState
 {
+	var buttonsGroup:FlxSpriteGroup;
+
 	var titleText:FlxText;
 	var playText:UIClickableText;
 	var gameQuitText:UIClickableText;
@@ -20,6 +23,9 @@ class MainMenuState extends FlxState
 	{
 		super.create();
 		FlixelUtil.playMenuMusic();
+
+		buttonsGroup = new FlxSpriteGroup();
+		add(buttonsGroup);
 
 		titleText = new FlxText();
 		titleText.text = 'ANTLANTIS';
@@ -37,26 +43,39 @@ class MainMenuState extends FlxState
 		{
 			FlxG.switchState(() -> new PlayState());
 		};
-		add(playText);
+		buttonsGroup.add(playText);
 
 		gameQuitText = new UIClickableText();
 		gameQuitText.text = 'Quit Game';
 		gameQuitText.size = 64;
 		gameQuitText.screenCenter(X);
-		gameQuitText.y = 400;
+		gameQuitText.y = FlxG.height;
 		gameQuitText.behavior.updateHoverBounds(gameQuitText.x, gameQuitText.y, gameQuitText.width, gameQuitText.height);
 		gameQuitText.behavior.onClick = () ->
 		{
 			FlixelUtil.closeGame();
 		}
-		add(gameQuitText);
+		buttonsGroup.add(gameQuitText);
 
-		new FlxTimer().start(1, (_) ->
+		var dur:Float = 0.75;
+		var newY:Float = 0;
+		for (button in buttonsGroup)
 		{
-			FlxTween.tween(playText, {y: (FlxG.height / 2) - (playText.height / 2)}, 0.75, {
-				ease: FlxEase.quadOut
+			var b:UIClickableText = cast(button, UIClickableText);
+			var targetY = ((FlxG.height / 2) - (b.height / 2)) + newY; // capture value
+			new FlxTimer().start(dur, (_) ->
+			{
+				FlxTween.tween(b, {y: targetY}, 0.65, {
+					ease: FlxEase.quadOut,
+					onComplete: (_) ->
+					{
+						b.behavior.updateHoverBounds(b.x, b.y, b.width, b.height);
+					}
+				});
 			});
-		}, 1);
+			dur *= 1.25;
+			newY += button.height + 15;
+		}
 	}
 
 	override function update(elapsed:Float)
