@@ -1,5 +1,9 @@
 package;
 
+import backend.util.FlixelUtil;
+import backend.util.SaveUtil;
+import lime.app.Application;
+import backend.data.ClientPrefs;
 import menus.MainMenuState;
 import flixel.text.FlxText;
 import backend.util.PathUtil;
@@ -13,7 +17,10 @@ class InitState extends FlxState
 	{
 		super.create();
 
+        ClientPrefs.loadAll();
         configureFlixelSettings();
+        addEventListeners();
+
         FlxG.switchState(() -> new MainMenuState());
 	}
 
@@ -21,5 +28,14 @@ class InitState extends FlxState
     {
         FlxG.mouse.useSystemCursor = true;
         FlxAssets.FONT_DEFAULT = PathUtil.ofFont('Orange Kid');
+        FlxAssets.defaultSoundExtension = #if web 'mp3' #else 'ogg' #end;
+    }
+
+    function addEventListeners():Void
+    {
+        Application.current.window.onClose.add(() ->
+        {
+            FlixelUtil.closeGame(false);
+        });
     }
 }

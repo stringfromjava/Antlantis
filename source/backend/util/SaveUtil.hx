@@ -18,7 +18,6 @@ final class SaveUtil
 	public static function saveAll():Void
 	{
 		saveUserOptions();
-		saveUserControls();
 		saveUserProgress();
 	}
 
@@ -49,31 +48,6 @@ final class SaveUtil
 		// Warn if all settings weren't saved
 		if (!didOptionsSave)
 			LoggerUtil.log('All options failed to save.', WARNING, false);
-	}
-
-	/**
-	 * Saves all of the user's controls.
-	 */
-	public static function saveUserControls():Void
-	{
-		// Log info
-		LoggerUtil.log('Saving user controls');
-		// Create and bind the saves
-		var controlsSave:FlxSave = new FlxSave();
-		controlsSave.bind(Constants.CONTROLS_SAVE_BIND_ID, PathUtil.getSavePath());
-
-		// Assign the data
-		controlsSave.data.keyboard = ClientPrefs.getBinds();
-
-		// For checking if the data saved
-		var didControlsSave:Bool = controlsSave.flush();
-
-		// Close the bind
-		controlsSave.close();
-
-		// Warn if all controls weren't saved
-		if (!didControlsSave)
-			LoggerUtil.log('All controls failed to save.', WARNING, false);
 	}
 
 	/**
@@ -131,7 +105,6 @@ final class SaveUtil
 
 		// Connect to the saves
 		optionsSave.bind(Constants.OPTIONS_SAVE_BIND_ID, PathUtil.getSavePath());
-		controlsSave.bind(Constants.CONTROLS_SAVE_BIND_ID, PathUtil.getSavePath());
 
 		// Delete the data
 		optionsSave.erase();

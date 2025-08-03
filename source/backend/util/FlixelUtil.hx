@@ -5,16 +5,11 @@ import flixel.FlxSprite;
 import flixel.FlxState;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.input.keyboard.FlxKey;
-import flixel.sound.FlxSound;
 import flixel.tweens.FlxTween;
 import flixel.util.FlxColor;
-import flixel.util.FlxTimer;
 import haxe.Exception;
-import openfl.filters.ShaderFilter;
 import backend.api.DiscordClient;
-import backend.data.ClientPrefs.ShaderModeType;
 import backend.data.Constants;
-import shaders.*;
 #if SOUND_FILTERS_ALLOWED
 import flixel.sound.filters.FlxFilteredSound;
 import flixel.sound.filters.FlxSoundFilter;
@@ -145,46 +140,6 @@ final class FlixelUtil
 			{
 				sound.stop();
 			}
-		}
-	}
-
-	/**
-	 * Sets the game's filters.
-	 * 
-	 * @param mode The mode the filters should apply with.
-	 * 			   Check `backend.ClientPrefs.ShaderModeType` for
-	 * 			   what each mode means. `null` = `DEFAULT`.
-	 */
-	public static function setFilters(?mode:ShaderModeType):Void
-	{
-		switch (mode)
-		{
-			#if ADVANCED_SHADERS_ALLOWED
-			case ShaderModeType.DEFAULT | null:
-				FlxG.game.setFilters([
-					new ShaderFilter(CacheUtil.vcrBorderShader),
-					new ShaderFilter(CacheUtil.vcrMario85Shader),
-					new ShaderFilter(CacheUtil.grainShader),
-					new ShaderFilter(new Hq2xShader()),
-					new ShaderFilter(new TiltshiftShader())
-				]);
-			#end
-			case ShaderModeType.FAST:
-				FlxG.game.setFilters([
-					new ShaderFilter(CacheUtil.grainShader),
-					new ShaderFilter(new ScanlineShader()),
-					new ShaderFilter(new Hq2xShader()),
-					new ShaderFilter(new TiltshiftShader())
-				]);
-			case ShaderModeType.MINIMAL:
-				FlxG.game.setFilters([
-					new ShaderFilter(CacheUtil.grainShader),
-					new ShaderFilter(new Hq2xShader())
-				]);
-			case ShaderModeType.NONE:
-				FlxG.game.setFilters([]);
-			default:
-				FlxG.game.setFilters([]);
 		}
 	}
 

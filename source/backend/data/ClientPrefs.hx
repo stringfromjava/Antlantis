@@ -5,34 +5,7 @@ import backend.util.LoggerUtil;
 import backend.util.PathUtil;
 import backend.util.SaveUtil;
 import flixel.FlxG;
-import flixel.input.keyboard.FlxKey;
 import flixel.util.FlxSave;
-
-/**
- * The shader(s) to display.
- */
-enum ShaderModeType
-{
-	/**
-	 * All shaders are applied (excluding Scanline).
-	 */
-	DEFAULT;
-
-	/**
-	 * Grain, Scanline, Hq2x and Tiltshift shaders are applied.
-	 */
-	FAST;
-
-	/**
-	 * Grain and Hq2x shaders are applied.
-	 */
-	MINIMAL;
-
-	/**
-	 * No shaders are applied.
-	 */
-	NONE;
-}
 
 /**
  * Class that handles, modifies and stores the user's
@@ -52,44 +25,11 @@ enum ShaderModeType
 final class ClientPrefs
 {
 	/**
-	 * The default controls for the player. This is typically used when
-	 * the player wishes to reset all of their binds.
-	 */
-	static final DEFAULT_CONTROLS_KEYBOARD:Map<String, FlxKey> = [
-		// Movement
-		'mv_up' => W,
-		'mv_left' => A,
-		'mv_down' => S,
-		'mv_right' => D,
-		// UI
-		'ui_left' => LEFT,
-		'ui_down' => DOWN,
-		'ui_up' => UP,
-		'ui_right' => RIGHT,
-		'ui_select' => ENTER,
-		'ui_back' => ESCAPE,
-		// Volume
-		'vl_up' => PLUS,
-		'vl_down' => MINUS,
-		'vl_mute' => F12,
-		// Misc.
-		'ms_fullscreen' => F11,
-		// Debug
-		'db_openeditors' => F7
-	];
-
-	/**
 	 * The default options for the game. These are only really used when
 	 * the player wants to reset their options, has updated the game ***OR*** 
 	 * is missing anything important.
 	 */
 	static final DEFAULT_OPTIONS:Map<String, Any> = [
-		// Graphics
-		#if !web
-		'shaderMode' => DEFAULT,
-		#else
-		'shaderMode' => FAST,
-		#end
 		// Misc.
 		'discordRPC' => true,
 		'minimizeVolume' => true,
@@ -102,26 +42,11 @@ final class ClientPrefs
 	 */
 	static var options:Map<String, Any> = DEFAULT_OPTIONS;
 
-	/**
-	 * The keyboard controls the user currently has set.
-	 */
-	static var controlsKeyboard:Map<String, FlxKey>;
-
 	function new() {}
 
 	//
 	// GETTERS AND SETTERS
 	// =====================================
-
-	/**
-	 * Get and return the default keyboard controls for the user.
-	 * 
-	 * @return A `Map` of the default keyboard controls.
-	 */
-	public static inline function getDefaultControls():Map<String, FlxKey>
-	{
-		return DEFAULT_CONTROLS_KEYBOARD.copy();
-	}
 
 	/**
 	 * Get and return the default options for the user.
@@ -131,36 +56,6 @@ final class ClientPrefs
 	public static inline function getDefaultOptions():Map<String, Any>
 	{
 		return DEFAULT_OPTIONS.copy();
-	}
-
-	/**
-	 * Get and return a client bind by its ID.
-	 * 
-	 * @param bind The bind to get as a `String`.
-	 * @return The value of the said bind. If it does not exist, then an
-	 * exception is thrown.
-	 */
-	public static function getBind(bind:String):FlxKey
-	{
-		if (controlsKeyboard.exists(bind))
-		{
-			return controlsKeyboard.get(bind);
-		}
-		else
-		{
-			FlixelUtil.crashGame('Attempted to obtain non-existent bind "$bind".');
-		}
-		return FlxKey.NONE;
-	}
-
-	/**
-	 * Get and return all the user's currently set controls and binds.
-	 * 
-	 * @return A `Map` of all the user's binds.
-	 */
-	public static inline function getBinds():Map<String, FlxKey>
-	{
-		return controlsKeyboard.copy();
 	}
 
 	/**
@@ -214,26 +109,6 @@ final class ClientPrefs
 		}
 	}
 
-	/**
-	 * Set a specific key bind for the user.
-	 * 
-	 * @param bind   The bind to be set.
-	 * @param newKey The key to set it to.
-	 * @throws Exception If the bind does not exist.
-	 */
-	public static function setBind(bind:String, newKey:FlxKey):Void
-	{
-		if (controlsKeyboard.exists(bind))
-		{
-			controlsKeyboard.set(bind, newKey);
-			SaveUtil.saveUserControls();
-		}
-		else
-		{
-			FlixelUtil.crashGame('Attempted to change non-existent bind "$bind".');
-		}
-	}
-
 	//
 	// METHODS
 	// =============================
@@ -251,7 +126,6 @@ final class ClientPrefs
 		var controlsData:FlxSave = new FlxSave();
 
 		optionsData.bind(Constants.OPTIONS_SAVE_BIND_ID, PathUtil.getSavePath());
-		controlsData.bind(Constants.CONTROLS_SAVE_BIND_ID, PathUtil.getSavePath());
 
 		if (optionsData.data.options != null)
 		{
@@ -261,16 +135,6 @@ final class ClientPrefs
 		{
 			options = getDefaultOptions();
 			LoggerUtil.log('No options save data was found! Using default options', WARNING);
-		}
-
-		if (controlsData.data.keyboard != null)
-		{
-			controlsKeyboard = controlsData.data.keyboard;
-		}
-		else
-		{
-			controlsKeyboard = getDefaultControls();
-			LoggerUtil.log('No controls save data was found! Using default controls', WARNING);
 		}
 
 		// Check if the user has any new options
@@ -290,28 +154,6 @@ final class ClientPrefs
 			if (!DEFAULT_OPTIONS.exists(option))
 			{
 				options.remove(option);
-			}
-		}
-
-		// Check if the user has any new controls
-		// (this is for when new controls are added in an update!)
-		for (bind in DEFAULT_CONTROLS_KEYBOARD.keys())
-		{
-			if (!controlsKeyboard.exists(bind))
-			{
-				controlsKeyboard.set(bind, DEFAULT_CONTROLS_KEYBOARD.get(bind));
-				LoggerUtil.log('Added missing control "$bind" with default bind "${DEFAULT_CONTROLS_KEYBOARD.get(bind)}".', false);
-			}
-		}
-
-		// Filter out any binds that are not present in the current
-		// standard set of binds (which is determined by the default binds)
-		for (bind in controlsKeyboard.keys())
-		{
-			if (!DEFAULT_CONTROLS_KEYBOARD.exists(bind))
-			{
-				controlsKeyboard.remove(bind);
-				LoggerUtil.log('Removed unknown bind "$bind".', false);
 			}
 		}
 

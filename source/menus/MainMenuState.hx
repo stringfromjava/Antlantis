@@ -1,24 +1,27 @@
 package menus;
 
+import backend.util.FlixelUtil;
 import flixel.FlxState;
 import flixel.text.FlxText;
 
 class MainMenuState extends FlxState
 {
-
     var playText:FlxText;
 
-    override public function create()
+    override function create()
     {
         super.create();
+
+        FlixelUtil.playMenuMusic();
+
         playText = new FlxText();
         playText.text = 'Play';
-        playText.screenCenter(X);
         playText.size = 64;
+        playText.screenCenter(X);
         add(playText);
     }
 
-    override public  function update(elapsed:Float) 
+    override function update(elapsed:Float) 
     {
         super.update(elapsed);
     }
