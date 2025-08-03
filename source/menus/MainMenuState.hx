@@ -1,6 +1,7 @@
 package menus;
 
 import flixel.group.FlxSpriteGroup;
+import play.PlayState;
 import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
 import flixel.util.FlxTimer;
@@ -56,7 +57,7 @@ class MainMenuState extends FlxState
 			FlixelUtil.closeGame();
 		}
 		buttonsGroup.add(gameQuitText);
-
+        
 		var dur:Float = 0.75;
 		var newY:Float = 0;
 		for (button in buttonsGroup)
