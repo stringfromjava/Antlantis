@@ -1,5 +1,6 @@
 package;
 
+import openfl.Lib;
 import flixel.FlxGame;
 import openfl.display.Sprite;
 
@@ -12,6 +13,11 @@ class Main extends Sprite
 		framerate: 60,
 		skipSplash: true,
 		startFullscreen: false
+	}
+
+	public static function main():Void
+	{
+		Lib.current.addChild(new Main());
 	}
 
 	public function new()
