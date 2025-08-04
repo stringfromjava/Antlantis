@@ -1,5 +1,6 @@
 package play;
 
+import flixel.FlxSubState;
 import backend.util.PathUtil;
 import flixel.FlxSprite;
 import flixel.math.FlxPoint;
@@ -16,19 +17,39 @@ import ui.UIClickableSprite;
 
 class PlayState extends FlxState
 {
+	//
+	// CAMERAS
+	// ================================
 	var uiCamera:FlxCamera;
 	var gameCamera:FlxCamera;
+	var subStateCamera:FlxCamera;
+
+	//
+	// TEXT DISPLAYS
+	// =======================================
 	var totalAntDisplay:FlxText;
-	var totalAnts:Int = 0;
 	var blackAntDisplay:FlxText;
-	var blackAnts:Int = 0;
 	var brownAntDisplay:FlxText;
-	var brownAnts:Int = 0;
 	var redAntDisplay:FlxText;
-	var redAnts:Int = 0;
+
+	//
+	// UI
+	// ========================
 	var closedJournal:UIClickableSprite;
-	var isDragging:Bool = false;
+
+	//
+	// EXTRAS
+	// ====================================
 	var lastMousePos:FlxPoint;
+
+	//
+	// DATA
+	// ==============================
+	var totalAnts:Int = 0;
+	var blackAnts:Int = 0;
+	var brownAnts:Int = 0;
+	var redAnts:Int = 0;
+	var isDragging:Bool = false;
 
 	var mario:FlxSprite;
 
@@ -36,22 +57,24 @@ class PlayState extends FlxState
 	{
 		super.create();
 
+		uiCamera = new FlxCamera();
+		gameCamera = new FlxCamera();
+		subStateCamera = new FlxCamera();
+		uiCamera.bgColor.alpha = 0;
+		subStateCamera.bgColor.alpha = 0;
+		gameCamera.bgColor = FlxColor.fromRGB(140, 242, 255);
+		FlxG.cameras.add(gameCamera);
+		FlxG.cameras.add(uiCamera, false);
+		FlxG.cameras.add(subStateCamera, false);
+
 		lastMousePos = new FlxPoint();
 
 		mario = new FlxSprite();
 		mario.loadGraphic(PathUtil.ofSharedImage('mario'));
-		mario.setGraphicSize(50, 50);
+		mario.setGraphicSize(150, 150);
 		mario.screenCenter(XY);
 		mario.cameras = [gameCamera];
 		add(mario);
-
-		bgColor = FlxColor.fromRGB(140, 242, 255);
-
-		uiCamera = new FlxCamera();
-		gameCamera = new FlxCamera();
-		uiCamera.bgColor.alpha = 0;
-		FlxG.cameras.add(uiCamera, false);
-		FlxG.cameras.add(gameCamera, false);
 
 		totalAntDisplay = new FlxText();
 		totalAntDisplay.text = 'Total Ants: $totalAnts';
@@ -159,6 +182,11 @@ class PlayState extends FlxState
 	{
 		super.onFocusLost();
 		openSubState(new PauseSubState());
+	}
+
+	override function openSubState(SubState:FlxSubState) {
+		super.openSubState(SubState);
+		SubState.cameras = [subStateCamera];
 	}
 
 	function screenShake(elapsed:Float):Void
