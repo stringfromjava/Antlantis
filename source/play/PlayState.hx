@@ -112,7 +112,7 @@ class PlayState extends FlxState
 	{
 		super.update(elapsed);
 
-		if (FlxG.mouse.pressed)
+		if (FlxG.mouse.pressedRight)
 		{
 			// For dragging around the map
 			if (!isDragging)

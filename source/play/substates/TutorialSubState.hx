@@ -14,10 +14,19 @@ class TutorialSubState extends FlxSubState
 {
 	var bg:FlxSprite;
 	var tutorialText:FlxText;
-	var tutorialState:Int = 0;
+	var textArrayIndex:Int = 0;
 	var currentY:Float;
 	var newY:Float;
 	var hasTweened:Bool = false;
+	var textArray:Array<String> = [
+		'Welcome to Antlantis!',
+		'As the queen ant, your job is to grow your anthill,
+        manage your colony, and keep your ants safe!',
+		'Sometimes, your anthill will be attacked by Antlions,
+        Beetles, and even other kinds of ants!',
+		'When your anthill gets attacked, be sure to send your best ants at
+        the predators and keep your colony safe'
+	];
 
 	override function create()
 	{
@@ -29,9 +38,9 @@ class TutorialSubState extends FlxSubState
 		add(bg);
 
 		tutorialText = new FlxText();
-		tutorialText.text = 'Welcome to Antlantis!';
-		tutorialText.size = 100;
-        tutorialText.alignment = FlxTextAlign.CENTER;
+		tutorialText.text = textArray[0];
+		tutorialText.size = 60;
+		tutorialText.alignment = FlxTextAlign.CENTER;
 		tutorialText.setBorderStyle(OUTLINE, FlxColor.BLACK, 3);
 		tutorialText.screenCenter(X);
 		tutorialText.y = -FlxG.height;
@@ -48,42 +57,15 @@ class TutorialSubState extends FlxSubState
 
 		if (FlxG.keys.justPressed.SPACE)
 		{
-			tutorialState += 1;
-		}
-
-		if (tutorialState == 1)
-		{
-			tutorialText.text = '
-            As the queen ant, your job is to grow your anthill,
-            manage your colony, and keep your ants safe!
-            ';
-			tutorialText.size = 50;
+			textArrayIndex++;
+			var t:String = textArray[textArrayIndex];
+			if (t == null)
+			{
+				close();
+                return;
+			}
+			tutorialText.text = t;
 			tutorialText.screenCenter(XY);
-			currentY = tutorialText.y;
-			newY = currentY + 40;
-		}
-
-		if (tutorialState == 2)
-		{
-			tutorialText.text = '
-            Sometimes, your anthill will be attacked by Antlions,
-            Beetles, and even other kinds of ants!
-            ';
-			tutorialText.screenCenter(XY);
-		}
-
-		if (tutorialState == 3)
-		{
-			tutorialText.text = '
-            When your anthill gets attacked, be sure to send your best ants at
-            the predators and keep your colony safe
-            ';
-			tutorialText.screenCenter(XY);
-		}
-
-		if (tutorialState == 4)
-		{
-			close();
 		}
 	}
 }
