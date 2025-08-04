@@ -161,7 +161,7 @@ class PlayState extends FlxState
 		}
 
 		// Zoom the camera back in when it adds zoom
-		FlxG.camera.zoom = FlxMath.lerp(1.0, FlxG.camera.zoom, Math.exp(-elapsed * 3.125));
+		gameCamera.zoom = FlxMath.lerp(1.0, gameCamera.zoom, Math.exp(-elapsed * 3.125));
 		uiCamera.zoom = FlxMath.lerp(1.0, uiCamera.zoom, Math.exp(-elapsed * 3.125));
 
 		totalAnts = blackAnts + brownAnts + redAnts;
@@ -191,8 +191,11 @@ class PlayState extends FlxState
 
 	function screenShake(elapsed:Float):Void
 	{
+		gameCamera.zoom += 0.015;
 		uiCamera.zoom += 0.03;
+		FlxTween.completeTweensOf(gameCamera);
 		FlxTween.completeTweensOf(uiCamera);
+		gameCamera.shake(0.0065, 0.078);
 		uiCamera.shake(0.009, 0.078);
 	}
 }

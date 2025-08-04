@@ -14,6 +14,7 @@ class TutorialSubState extends FlxSubState
 {
 	var bg:FlxSprite;
 	var tutorialText:FlxText;
+
 	var textArrayIndex:Int = 0;
 	var currentY:Float;
 	var newY:Float;
@@ -62,7 +63,7 @@ class TutorialSubState extends FlxSubState
 			if (t == null)
 			{
 				close();
-                return;
+				return;
 			}
 			tutorialText.text = t;
 			tutorialText.screenCenter(XY);
