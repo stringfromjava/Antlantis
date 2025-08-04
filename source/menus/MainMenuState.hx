@@ -1,5 +1,7 @@
 package menus;
 
+import backend.util.PathUtil;
+import flixel.FlxSprite;
 import flixel.group.FlxSpriteGroup;
 import play.PlayState;
 import flixel.tweens.FlxEase;
@@ -15,8 +17,7 @@ import flixel.util.FlxColor;
 class MainMenuState extends FlxState
 {
 	var buttonsGroup:FlxSpriteGroup;
-
-	var titleText:FlxText;
+    var logo:FlxSprite;
 	var playText:UIClickableText;
 	var gameQuitText:UIClickableText;
 
@@ -28,11 +29,16 @@ class MainMenuState extends FlxState
 		buttonsGroup = new FlxSpriteGroup();
 		add(buttonsGroup);
 
-		titleText = new FlxText();
-		titleText.text = 'ANTLANTIS';
-		titleText.size = 100;
-		titleText.screenCenter(X);
-		add(titleText);
+        logo = new FlxSprite();
+        logo.loadGraphic(PathUtil.ofSharedImage('logo'));
+        logo.scale.set(0.4, 0.4);
+        logo.updateHitbox();
+        logo.y = -75;
+        logo.screenCenter(X);
+        add(logo);
+
+        trace(logo.y);
+        trace(logo.x);
 
 		playText = new UIClickableText();
 		playText.text = 'Play';
