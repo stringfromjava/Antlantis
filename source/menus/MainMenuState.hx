@@ -33,7 +33,7 @@ class MainMenuState extends FlxState
         logo.loadGraphic(PathUtil.ofSharedImage('logo'));
         logo.scale.set(0.4, 0.4);
         logo.updateHitbox();
-        logo.y = -75;
+        logo.y = -20;
         logo.screenCenter(X);
         add(logo);
 
@@ -43,7 +43,7 @@ class MainMenuState extends FlxState
 		playText = new UIClickableText();
 		playText.text = 'Play';
 		playText.size = 64;
-		playText.screenCenter(X);
+		playText.x = FlxG.width/3;
 		playText.y = FlxG.height;
 		playText.behavior.updateHoverBounds(playText.x, playText.y, playText.width, playText.height);
 		playText.behavior.onClick = () ->
@@ -53,9 +53,9 @@ class MainMenuState extends FlxState
 		buttonsGroup.add(playText);
 
 		gameQuitText = new UIClickableText();
-		gameQuitText.text = 'Quit Game';
+		gameQuitText.text = 'Quit';
 		gameQuitText.size = 64;
-		gameQuitText.screenCenter(X);
+		gameQuitText.x = FlxG.width * 19/32;
 		gameQuitText.y = FlxG.height;
 		gameQuitText.behavior.updateHoverBounds(gameQuitText.x, gameQuitText.y, gameQuitText.width, gameQuitText.height);
 		gameQuitText.behavior.onClick = () ->
@@ -68,7 +68,7 @@ class MainMenuState extends FlxState
 		for (button in buttonsGroup)
 		{
 			var b:UIClickableText = cast(button, UIClickableText);
-			var targetY = ((FlxG.height / 2) - (b.height / 2)) + newY; // capture value
+			var targetY = ((FlxG.height / 1.3) - (b.height / 1.3)); // capture value
 			new FlxTimer().start(dur, (_) ->
 			{
 				FlxTween.tween(b, {y: targetY}, 0.65, {
@@ -80,7 +80,6 @@ class MainMenuState extends FlxState
 				});
 			});
 			dur *= 1.25;
-			newY += button.height + 15;
 		}
 	}
 
