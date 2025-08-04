@@ -35,7 +35,7 @@ final class Constants
 	/**
 	 * Name of the music that plays when in the main menus.
 	 */
-	public static final MENU_MUSIC_NAME:String = 'Worthless';
+	public static final MENU_MUSIC_NAME:String = 'Main Menu';
 
 	//
 	// PLAYER

@@ -1,12 +1,13 @@
 package play;
 
-import play.substates.TutorialSubstate;
-import ui.UIClickableSprite;
-import play.substates.PauseSubstate;
-import flixel.FlxG;
+import flixel.util.FlxColor;
 import flixel.FlxCamera;
+import flixel.FlxG;
 import flixel.FlxState;
 import flixel.text.FlxText;
+import play.substates.PauseSubState;
+import play.substates.TutorialSubState;
+import ui.UIClickableSprite;
 
 class PlayState extends FlxState
 {
@@ -24,6 +25,9 @@ class PlayState extends FlxState
 	override public function create()
 	{
 		super.create();
+
+		bgColor = FlxColor.fromRGB(140, 242, 255);
+
 		uiCamera = new FlxCamera();
 		uiCamera.bgColor.alpha = 0;
 		FlxG.cameras.add(uiCamera, false);
@@ -55,7 +59,7 @@ class PlayState extends FlxState
 		redAntDisplay.cameras = [uiCamera];
 		add(redAntDisplay);
 
-		openSubState(new TutorialSubstate());
+		openSubState(new TutorialSubState());
 	}
 
 	override public function update(elapsed:Float)
@@ -87,7 +91,7 @@ class PlayState extends FlxState
 		{
 			//YO MOM SO BEEG
 			//SHE TOO BEEG !!!
-			openSubState(new PauseSubstate());
+			openSubState(new PauseSubState());
 		}
 	}
 }

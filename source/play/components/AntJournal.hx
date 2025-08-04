@@ -1,4 +1,4 @@
-package play;
+package play.components;
 
 import ui.UIClickableSprite;
 

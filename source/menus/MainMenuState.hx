@@ -1,5 +1,6 @@
 package menus;
 
+import lime.app.Application;
 import backend.util.PathUtil;
 import flixel.FlxSprite;
 import flixel.group.FlxSpriteGroup;

@@ -1,12 +1,12 @@
 package play.substates;
 
-import flixel.util.FlxColor;
-import flixel.text.FlxText;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.FlxSubState;
+import flixel.text.FlxText;
+import flixel.util.FlxColor;
 
-class TutorialSubstate extends FlxSubState
+class TutorialSubState extends FlxSubState
 {
 
     var bg:FlxSprite;
@@ -37,8 +37,6 @@ class TutorialSubstate extends FlxSubState
         if (FlxG.keys.justPressed.SPACE)
         {
             tutorialState += 1;
-            trace (tutorialText.y);
-            trace (tutorialText.x);
         }
 
         if (tutorialState == 1)

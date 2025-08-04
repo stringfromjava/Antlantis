@@ -1,112 +1,104 @@
+// public car
 package play.substates;
 
+import flixel.group.FlxGroup.FlxTypedGroup;
 import backend.util.FlixelUtil;
-import flixel.util.FlxCollision;
-import menus.MainMenuState;
-import ui.UIClickableText;
+import flixel.FlxG;
+import flixel.FlxSprite;
+import flixel.FlxSubState;
+import flixel.group.FlxSpriteGroup;
+import flixel.text.FlxText;
 import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
 import flixel.util.FlxColor;
-import flixel.FlxSprite;
-import flixel.FlxG;
-import flixel.text.FlxText;
-import flixel.FlxSubState;
-
-class PauseSubstate extends FlxSubState
+import menus.MainMenuState;
+import ui.UIClickableText;
+class PauseSubState extends FlxSubState
 {
+	var textGroup:FlxTypedGroup<FlxSprite>;
+	var buttonTexts:Array<String> = ['Resume Game', 'Quit Game'];
 
-    var text:FlxText;
-    var resumeText:UIClickableText;
-    var toMenuText:UIClickableText;
-    var gameQuitText:UIClickableText;
-    var bg:FlxSprite;
+	var text:FlxText;
+	var b:UIClickableText;
+	var toMenuText:UIClickableText;
+	var gameQuitText:UIClickableText;
+	var bg:FlxSprite;
+    var buttonsBg:FlxSprite;
 
-    override function create() 
-    {
-        super.create();
+	override function create()
+	{
+		super.create();
 
-        bg = new FlxSprite();
-        bg.makeGraphic(FlxG.width, FlxG.height);
-        bg.alpha = 0;
-        add(bg);
+		textGroup = new FlxTypedGroup<FlxSprite>();
+		add(textGroup);
 
-        text = new FlxText();
-        text.text = 'GAME PAUSED';
-        text.size = 80;
-        text.setBorderStyle(OUTLINE, FlxColor.BLACK, 3);
-        text.screenCenter(X);
-        text.alpha = 0;
-        add(text);
+		bg = new FlxSprite();
+		bg.makeGraphic(FlxG.width, FlxG.height);
+		bg.alpha = 0;
+		add(bg);
 
-        resumeText = new UIClickableText();
-        resumeText.text = 'Resume Game';
-        resumeText.size = 64;
-        resumeText.setBorderStyle(OUTLINE, FlxColor.BLACK, 3);
-        resumeText.screenCenter(X);
-        resumeText.y = 200;
-        resumeText.alpha = 0;
-        resumeText.behavior.updateHoverBounds(resumeText.x, resumeText.y, resumeText.width, resumeText.height);
-        resumeText.behavior.onClick = () -> 
-        {
-            close();
-        };
-        add(resumeText);
+        buttonsBg = new FlxSprite();
+        buttonsBg.makeGraphic(Std.int(FlxG.width / 2) + 50, FlxG.height * 5, FlxColor.BLACK);
+        buttonsBg.setPosition(FlxG.width + 400, -100);
+        buttonsBg.alpha = 0.83;
+        buttonsBg.angle = 15;
+        add(buttonsBg);
 
-        toMenuText = new UIClickableText();
-        toMenuText.text = 'To Main Menu';
-        toMenuText.size = 64;
-        toMenuText.setBorderStyle(OUTLINE, FlxColor.BLACK, 3);
-        toMenuText.screenCenter(X);
-        toMenuText.y = 300;
-        toMenuText.alpha = 0;
-        toMenuText.behavior.updateHoverBounds(toMenuText.x, toMenuText.y, toMenuText.width, toMenuText.height);
-        toMenuText.behavior.onClick = () ->
-        {
-            FlxG.switchState(() -> new MainMenuState());
-        };
-        add(toMenuText);
+		text = new FlxText();
+		text.text = 'GAME PAUSED';
+		text.size = 80;
+		text.setBorderStyle(OUTLINE, FlxColor.BLACK, 3);
+		text.screenCenter(X);
+		text.alpha = 0;
+		add(text);
 
-        gameQuitText = new UIClickableText();
-        gameQuitText.text = 'Quit Game';
-        gameQuitText.size = 64;
-        gameQuitText.setBorderStyle(OUTLINE, FlxColor.BLACK, 3);
-        gameQuitText.screenCenter(X);
-        gameQuitText.y = 400;
-        gameQuitText.alpha = 0;
-        gameQuitText.behavior.updateHoverBounds(gameQuitText.x, gameQuitText.y, gameQuitText.width, gameQuitText.height);
-        gameQuitText.behavior.onClick = () ->
-        {
-            FlixelUtil.closeGame();
-        }
-        add (gameQuitText);
+		var funcs:Map<String, Void->Void> = [
+			'Resume Game' => () ->
+			{
+				close();
+			},
+			'Quit Game' => () ->
+			{
+				FlxG.switchState(() -> new MainMenuState());
+			}
+		];
 
-        FlxTween.tween(bg, {alpha:0.65}, 0.43, {
-            ease: FlxEase.quadInOut
+		var newY:Float = (FlxG.height / 2) - 40;
+		for (button in buttonTexts)
+		{
+			var b = new UIClickableText();
+			b.text = button;
+			b.size = 64;
+			b.setBorderStyle(OUTLINE, FlxColor.BLACK, 3);
+			b.x = FlxG.width;
+			b.y = newY;
+			b.alpha = 0;
+			b.behavior.updateHoverBounds(b.x, b.y, b.width, b.height);
+			b.behavior.onClick = funcs.get(button);
+			textGroup.add(b);
+
+			FlxTween.tween(b, {x: (FlxG.width - b.width) - 15}, 0.43, {
+				ease: FlxEase.quadInOut,
+			});
+
+            newY += b.height + 5;
+		}
+
+		FlxTween.tween(bg, {alpha: 0.65}, 0.43, {
+			ease: FlxEase.quadInOut
+		});
+
+        FlxTween.tween(buttonsBg, {x: (FlxG.width - buttonsBg.width) - 50}, 1.2, {
+            ease: FlxEase.backInOut
         });
+	}
 
-        FlxTween.tween(text, {alpha:1}, 0.43, {
-            ease: FlxEase.quadInOut
-        });
-
-        FlxTween.tween(resumeText, {alpha:1}, 0.43, {
-            ease: FlxEase.quadInOut
-        });
-
-        FlxTween.tween(toMenuText, {alpha:1}, 0.43, {
-            ease: FlxEase.quadInOut
-        });
-
-        FlxTween.tween(gameQuitText, {alpha:1}, 0.43, {
-            ease: FlxEase.quadInOut
-        });
-    }
-
-    override function update(elapsed:Float) 
-    {
-        super.update(elapsed);
-        if (FlxG.keys.justPressed.ESCAPE)
-        {
-            close();
-        }
-    }
+	override function update(elapsed:Float)
+	{
+		super.update(elapsed);
+		if (FlxG.keys.justPressed.ESCAPE)
+		{
+			close();
+		}
+	}
 }

@@ -421,6 +421,9 @@ class Project extends HXProject
 		// Add shared image assets
 		addAssetPath('assets/shared/images', 'assets/shared/images', 'default', ['*.png'], []);
 
+		// Add the very funi esatr egs
+		addAssetPath('assets/shhhhhh', 'assets/shhhhhh', 'default', ['*.png', '*.gif', '*.mp4'], []);
+
 		// Add shared music and sound assets for web (.mp3)
 		// (or .ogg if it is on desktop)
 		if (isWeb())

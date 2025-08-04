@@ -104,6 +104,14 @@ class InitState extends FlxState
 		});
 		#end
 
+		FlxG.signals.postUpdate.add(() ->
+		{
+			if (FlxG.mouse.justPressed || FlxG.mouse.justPressedRight)
+			{
+				FlxG.sound.play(PathUtil.ofSharedSound('click'), 0.75);
+			}
+		});
+
         Application.current.window.onClose.add(() ->
         {
             FlixelUtil.closeGame(false);
