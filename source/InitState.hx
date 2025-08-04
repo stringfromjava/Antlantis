@@ -1,5 +1,8 @@
 package;
 
+#if web
+import js.Browser;
+#end
 import flixel.text.FlxText;
 import backend.util.LoggerUtil;
 import flixel.tweens.FlxTween;
@@ -56,6 +59,13 @@ class InitState extends FlxState
         FlxG.mouse.useSystemCursor = true;
         FlxAssets.FONT_DEFAULT = PathUtil.ofFont('Orange Kid');
         FlxAssets.defaultSoundExtension = #if web 'mp3' #else 'ogg' #end;
+		// Disable the right-click context menu for HTML5
+        #if html5
+        Browser.document.addEventListener('contextmenu', (e) ->
+        {
+            e.preventDefault();
+        });
+        #end
     }
 
     function addEventListeners():Void

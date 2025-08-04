@@ -1,5 +1,8 @@
 package play;
 
+import backend.util.PathUtil;
+import flixel.FlxSprite;
+import flixel.math.FlxPoint;
 import flixel.tweens.FlxTween;
 import flixel.math.FlxMath;
 import flixel.util.FlxColor;
@@ -14,6 +17,7 @@ import ui.UIClickableSprite;
 class PlayState extends FlxState
 {
 	var uiCamera:FlxCamera;
+	var gameCamera:FlxCamera;
 	var totalAntDisplay:FlxText;
 	var totalAnts:Int = 0;
 	var blackAntDisplay:FlxText;
@@ -23,16 +27,31 @@ class PlayState extends FlxState
 	var redAntDisplay:FlxText;
 	var redAnts:Int = 0;
 	var closedJournal:UIClickableSprite;
+	var isDragging:Bool = false;
+	var lastMousePos:FlxPoint;
+
+	var mario:FlxSprite;
 
 	override public function create()
 	{
 		super.create();
 
-		// bgColor = FlxColor.fromRGB(140, 242, 255);
+		lastMousePos = new FlxPoint();
+
+		mario = new FlxSprite();
+		mario.loadGraphic(PathUtil.ofSharedImage('mario'));
+		mario.setGraphicSize(50, 50);
+		mario.screenCenter(XY);
+		mario.cameras = [gameCamera];
+		add(mario);
+
+		bgColor = FlxColor.fromRGB(140, 242, 255);
 
 		uiCamera = new FlxCamera();
+		gameCamera = new FlxCamera();
 		uiCamera.bgColor.alpha = 0;
 		FlxG.cameras.add(uiCamera, false);
+		FlxG.cameras.add(gameCamera, false);
 
 		totalAntDisplay = new FlxText();
 		totalAntDisplay.text = 'Total Ants: $totalAnts';
@@ -61,12 +80,42 @@ class PlayState extends FlxState
 		redAntDisplay.cameras = [uiCamera];
 		add(redAntDisplay);
 
+		trace('YO MOMMMMMAAA SOOOO BEEEEEGGGGG');
+
 		openSubState(new TutorialSubState());
 	}
 
 	override public function update(elapsed:Float)
 	{
 		super.update(elapsed);
+
+		if (FlxG.mouse.pressed)
+		{
+			// For dragging around the map
+			if (!isDragging)
+			{
+				// Start dragging
+				isDragging = true;
+				lastMousePos.set(FlxG.mouse.viewX, FlxG.mouse.viewY);
+			}
+			else
+			{
+				// Calculate mouse movement delta
+				var dx = FlxG.mouse.viewX - lastMousePos.x;
+				var dy = FlxG.mouse.viewY - lastMousePos.y;
+
+				// Move the camera
+				gameCamera.scroll.x -= dx;
+				gameCamera.scroll.y -= dy;
+
+				// Update last mouse position
+				lastMousePos.set(FlxG.mouse.viewX, FlxG.mouse.viewY);
+			}
+		}
+		else
+		{
+			isDragging = false;
+		}
 
 		if (FlxG.keys.justPressed.B)
 		{

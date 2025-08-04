@@ -15,7 +15,7 @@ class TutorialSubState extends FlxSubState
 
     var bg:FlxSprite;
     var tutorialText:FlxText;
-    var tutorialState:Int;
+    var tutorialState:Int = 0;
     var currentY:Float;
     var newY:Float;
     var hasTweened:Bool = false;
