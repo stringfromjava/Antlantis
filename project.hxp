@@ -443,7 +443,13 @@ class Project extends HXProject
 	/**
 	 * Configure the application's favicon and executable icon.
 	 */
-	function configureIcons() {}
+	function configureIcons()
+	{
+		addIcon('assets/icons/16.png', 16);
+		addIcon('assets/icons/32.png', 32);
+		addIcon('assets/icons/64.png', 64);
+		addIcon('assets/icons/64.png');
+	}
 
 	//
 	// HELPER FUNCTIONS

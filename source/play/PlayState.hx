@@ -1,5 +1,7 @@
 package play;
 
+import flixel.tweens.FlxTween;
+import flixel.math.FlxMath;
 import flixel.util.FlxColor;
 import flixel.FlxCamera;
 import flixel.FlxG;
@@ -26,7 +28,7 @@ class PlayState extends FlxState
 	{
 		super.create();
 
-		bgColor = FlxColor.fromRGB(140, 242, 255);
+		// bgColor = FlxColor.fromRGB(140, 242, 255);
 
 		uiCamera = new FlxCamera();
 		uiCamera.bgColor.alpha = 0;
@@ -81,6 +83,15 @@ class PlayState extends FlxState
 			redAnts += 1;
 		}
 
+		if (FlxG.keys.justPressed.SPACE)
+		{
+			screenShake(elapsed);
+		}
+
+		// Zoom the camera back in when it adds zoom
+		FlxG.camera.zoom = FlxMath.lerp(1.0, FlxG.camera.zoom, Math.exp(-elapsed * 3.125));
+		uiCamera.zoom = FlxMath.lerp(1.0, uiCamera.zoom, Math.exp(-elapsed * 3.125));
+
 		totalAnts = blackAnts + brownAnts + redAnts;
 		totalAntDisplay.text = 'Total Ants: $totalAnts';
 		blackAntDisplay.text = 'Black Ants: $blackAnts';
@@ -89,9 +100,22 @@ class PlayState extends FlxState
 
 		if (FlxG.keys.justPressed.ESCAPE)
 		{
-			//YO MOM SO BEEG
-			//SHE TOO BEEG !!!
+			// YO MOM SO BEEG
+			// SHE TOO BEEG !!!
 			openSubState(new PauseSubState());
 		}
+	}
+
+	override function onFocusLost()
+	{
+		super.onFocusLost();
+		openSubState(new PauseSubState());
+	}
+
+	function screenShake(elapsed:Float):Void
+	{
+		uiCamera.zoom += 0.03;
+		FlxTween.completeTweensOf(uiCamera);
+		uiCamera.shake(0.009, 0.078);
 	}
 }
