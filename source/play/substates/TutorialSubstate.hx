@@ -1,5 +1,9 @@
 package play.substates;
 
+import flixel.tweens.FlxEase;
+import flixel.tweens.FlxTween;
+import flixel.util.FlxColor;
+import flixel.text.FlxText;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.FlxSubState;
@@ -12,6 +16,9 @@ class TutorialSubState extends FlxSubState
     var bg:FlxSprite;
     var tutorialText:FlxText;
     var tutorialState:Int;
+    var currentY:Float;
+    var newY:Float;
+    var hasTweened:Bool = false;
 
     override function create() 
     {
@@ -26,8 +33,13 @@ class TutorialSubState extends FlxSubState
         tutorialText.text = 'Welcome to Antlantis!';
         tutorialText.size = 100;
         tutorialText.setBorderStyle(OUTLINE, FlxColor.BLACK, 3);
-        tutorialText.screenCenter(XY);
+        tutorialText.screenCenter(X);
+        tutorialText.y = -FlxG.height;
         add(tutorialText);
+
+        FlxTween.tween(tutorialText, {y:298.5}, 0.5, {
+            ease:FlxEase.quadInOut
+        });
     }
 
     override function update(elapsed:Float) 
@@ -48,6 +60,8 @@ class TutorialSubState extends FlxSubState
             ';
             tutorialText.size = 50;
             tutorialText.screenCenter(XY);
+            currentY = tutorialText.y;
+            newY = currentY + 40;
         }
 
         if (tutorialState == 2)
