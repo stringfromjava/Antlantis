@@ -1,16 +1,15 @@
 package;
 
+import flixel.text.FlxText;
 import backend.util.LoggerUtil;
 import flixel.tweens.FlxTween;
 import flixel.tweens.FlxTween.FlxTweenType;
 import flixel.math.FlxMath;
 import backend.util.CacheUtil;
 import backend.util.FlixelUtil;
-import backend.util.SaveUtil;
 import lime.app.Application;
 import backend.data.ClientPrefs;
 import menus.MainMenuState;
-import flixel.text.FlxText;
 import backend.util.PathUtil;
 import flixel.system.FlxAssets;
 import flixel.FlxG;
@@ -27,8 +26,29 @@ class InitState extends FlxState
         configureFlixelSettings();
         addEventListeners();
 
+		#if web
+		var clickMeText:FlxText = new FlxText();
+		clickMeText.text = 'Click the screen to start!';
+		clickMeText.size = 64;
+		clickMeText.underline = true;
+		clickMeText.screenCenter(XY);
+		add(clickMeText);
+		#end
+
+		#if !web
         FlxG.switchState(() -> new MainMenuState());
+		#end
 	}
+
+	#if web
+	override function update(elapsed:Float) {
+		super.update(elapsed);
+		if (FlxG.mouse.justPressed)
+		{
+			FlxG.switchState(() -> new MainMenuState());
+		}
+	}
+	#end
 
     function configureFlixelSettings():Void
     {
@@ -71,6 +91,15 @@ class InitState extends FlxState
 				{
 					FlxG.sound.volume = v;
 				});
+			}
+		});
+
+		// Fullscreen :sparkles:
+		FlxG.signals.postUpdate.add(() ->
+		{
+			if (FlxG.keys.justPressed.F11)
+			{
+				FlxG.fullscreen = !FlxG.fullscreen;
 			}
 		});
 		#end
