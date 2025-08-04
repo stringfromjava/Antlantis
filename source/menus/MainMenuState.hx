@@ -57,7 +57,6 @@ class MainMenuState extends FlxState
 			FlixelUtil.closeGame();
 		}
 		buttonsGroup.add(gameQuitText);
-        
 		var dur:Float = 0.75;
 		var newY:Float = 0;
 		for (button in buttonsGroup)

@@ -1,5 +1,6 @@
 package play;
 
+import play.substates.PauseSubstate;
 import flixel.FlxG;
 import flixel.FlxCamera;
 import flixel.FlxState;
@@ -31,14 +32,14 @@ class PlayState extends FlxState
 		blackAntDisplay = new FlxText();
 		blackAntDisplay.text = 'Black Ants: $blackAnts';
 		blackAntDisplay.size = 64;
-		blackAntDisplay.y = 100;
+		blackAntDisplay.y = 50;
 		blackAntDisplay.cameras = [uiCamera];
 		add(blackAntDisplay);
 
 		brownAntDisplay = new FlxText();
 		brownAntDisplay.text = 'Brown Ants: $brownAnts';
 		brownAntDisplay.size = 64;
-		brownAntDisplay.y = 200;
+		brownAntDisplay.y = 100;
 		brownAntDisplay.cameras = [uiCamera];
 		add(brownAntDisplay);
 	}
@@ -60,5 +61,11 @@ class PlayState extends FlxState
 		totalAntDisplay.text = 'Total Ants: $totalAnts';
 		blackAntDisplay.text = 'Black Ants: $blackAnts';
 		brownAntDisplay.text = 'Brown Ants: $brownAnts';
+
+		if (FlxG.keys.justPressed.ESCAPE)
+		{
+			trace('YO MOM SO BEEEG');
+			openSubState(new PauseSubstate());
+		}
 	}
 }
