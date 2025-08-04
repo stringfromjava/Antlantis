@@ -59,6 +59,7 @@ class TutorialSubstate extends FlxSubState
             Sometimes, your anthill will be attacked by Antlions,
             Beetles, and even other kinds of ants!
             ';
+            tutorialText.screenCenter(XY);
         }
 
         if (tutorialState == 3)
@@ -68,6 +69,7 @@ class TutorialSubstate extends FlxSubState
             When your anthill gets attacked, be sure to send your best ants at
             the predators and keep your colony safe
             ';
+            tutorialText.screenCenter(XY);
         }
 
         if(tutorialState == 4)
