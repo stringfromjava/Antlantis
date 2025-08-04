@@ -1,5 +1,6 @@
 package play;
 
+import ui.UIClickableSprite;
 import play.substates.PauseSubstate;
 import flixel.FlxG;
 import flixel.FlxCamera;
@@ -15,6 +16,7 @@ class PlayState extends FlxState
 	var blackAnts:Int = 0;
 	var brownAntDisplay:FlxText;
 	var brownAnts:Int = 0;
+	var closedJournal:UIClickableSprite;
 
 	override public function create()
 	{
