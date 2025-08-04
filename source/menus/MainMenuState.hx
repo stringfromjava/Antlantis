@@ -37,9 +37,6 @@ class MainMenuState extends FlxState
         logo.screenCenter(X);
         add(logo);
 
-        trace(logo.y);
-        trace(logo.x);
-
 		playText = new UIClickableText();
 		playText.text = 'Play';
 		playText.size = 64;
