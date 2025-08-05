@@ -21,6 +21,7 @@ class MainMenuState extends FlxState
     var logo:FlxSprite;
 	var playText:UIClickableText;
 	var gameQuitText:UIClickableText;
+	var optionsText:UIClickableText;
 
 	override function create()
 	{
@@ -61,6 +62,18 @@ class MainMenuState extends FlxState
 			FlixelUtil.closeGame();
 		}
 		buttonsGroup.add(gameQuitText);
+
+		optionsText = new UIClickableText();
+		optionsText.text = 'Options';
+		optionsText.size = 64;
+		optionsText.x = FlxG.width * 7/16;
+		optionsText.y = FlxG.height;
+		optionsText.behavior.updateHoverBounds(optionsText.x, optionsText.y, optionsText.width, optionsText.height);
+		optionsText.behavior.onClick = () ->
+		{
+			FlxG.switchState(() -> new OptionsMenuState());
+		}
+		buttonsGroup.add(optionsText);
 		var dur:Float = 0.75;
 		var newY:Float = 0;
 		for (button in buttonsGroup)
