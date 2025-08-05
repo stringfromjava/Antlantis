@@ -1,5 +1,9 @@
 package play;
 
+import backend.util.DataUtil;
+import play.entities.Entity;
+import backend.util.AssetUtil;
+import openfl.Assets;
 import flixel.tweens.FlxEase;
 import flixel.FlxSubState;
 import backend.util.PathUtil;
@@ -63,6 +67,11 @@ class PlayState extends FlxState
 	 */
 	public var isDragging:Bool = false;
 
+	/**
+	 * All of the registered entities for the game.
+	 */
+	public var registeredEntities:Map<String, Entity> = [];
+
 	var canInteract:Bool = true; // Can the user do basic things, such as dragging, interacting with entities, zooming, etc?
 	var totalAnts:Int = 0;
 	var blackAnts:Int = 0;
@@ -77,18 +86,10 @@ class PlayState extends FlxState
 		super.create();
 
 		instance = this;
-
-		uiCamera = new FlxCamera();
-		gameCamera = new FlxCamera();
-		subStateCamera = new FlxCamera();
-		uiCamera.bgColor.alpha = 0;
-		subStateCamera.bgColor.alpha = 0;
-		gameCamera.bgColor = FlxColor.fromRGB(140, 242, 255);
-		FlxG.cameras.add(gameCamera);
-		FlxG.cameras.add(uiCamera, false);
-		FlxG.cameras.add(subStateCamera, false);
-
 		lastMousePos = new FlxPoint();
+
+		setupCameras();
+		registerEntities();
 
 		mario = new FlxSprite();
 		mario.loadGraphic(PathUtil.ofSharedImage('mario'));
@@ -131,33 +132,8 @@ class PlayState extends FlxState
 	{
 		super.update(elapsed);
 
-		if (FlxG.mouse.pressedRight && canInteract)
-		{
-			// For dragging around the map
-			if (!isDragging)
-			{
-				// Start dragging
-				isDragging = true;
-				lastMousePos.set(FlxG.mouse.viewX, FlxG.mouse.viewY);
-			}
-			else
-			{
-				// Calculate mouse movement delta
-				var dx = FlxG.mouse.viewX - lastMousePos.x;
-				var dy = FlxG.mouse.viewY - lastMousePos.y;
-
-				// Move the camera
-				gameCamera.scroll.x -= dx;
-				gameCamera.scroll.y -= dy;
-
-				// Update last mouse position
-				lastMousePos.set(FlxG.mouse.viewX, FlxG.mouse.viewY);
-			}
-		}
-		else
-		{
-			isDragging = false;
-		}
+		checkForDragging();
+		updateCameraZoomsAndScrolls(elapsed);
 
 		if (FlxG.keys.justPressed.B)
 		{
@@ -179,32 +155,13 @@ class PlayState extends FlxState
 			screenShake(elapsed);
 		}
 
-		// Multiplies by the current state of the wheel during the current frame
-		currentZoom += 0.15 * FlxG.mouse.wheel;
-		if (currentZoom < 0.3)
-		{
-			currentZoom = 0.3;
-		}
-		else if (currentZoom > 3)
-		{
-			currentZoom = 3;
-		}
-
-		// Zoom the camera back in when it adds zoom
-		// (I stole this from FNF Psych Engine lol)
-		gameCamera.zoom = FlxMath.lerp(currentZoom, gameCamera.zoom, Math.exp(-elapsed * 4.765));
-		uiCamera.zoom = FlxMath.lerp(1.0, uiCamera.zoom, Math.exp(-elapsed * 3.125));
-
-		// Move the UI camera based on the mouse position
-		uiCamera.scroll.x = FlxMath.lerp(uiCamera.scroll.x, (FlxG.mouse.viewX - (FlxG.width / 2)) * 0.03, (1 / 30) * 240 * elapsed);
-		uiCamera.scroll.y = FlxMath.lerp(uiCamera.scroll.y, (FlxG.mouse.viewY - 6 - (FlxG.height / 2)) * 0.03, (1 / 30) * 240 * elapsed);
-
 		totalAnts = blackAnts + brownAnts + redAnts;
 		totalAntDisplay.text = 'Total Ants: $totalAnts';
 		blackAntDisplay.text = 'Black Ants: $blackAnts';
 		brownAntDisplay.text = 'Brown Ants: $brownAnts';
 		redAntDisplay.text = 'Red Ants: $redAnts';
 
+		// Check if the user wants to pause the game
 		if (FlxG.keys.justPressed.ESCAPE)
 		{
 			// YO MOM SO BEEG
@@ -214,7 +171,7 @@ class PlayState extends FlxState
 
 		// Check if the user is trying to reset the zoom and
 		// the dragged position of the game camera
-		if (FlxG.keys.pressed.CONTROL && FlxG.keys.justPressed.R)
+		if (FlxG.keys.pressed.SHIFT && FlxG.keys.justPressed.R)
 		{
 			isDragging = false;
 			canInteract = false;
@@ -254,6 +211,98 @@ class PlayState extends FlxState
 			FlxG.sound.music.volume = v;
 		});
 	}
+
+	//
+	// CREATE FUNCTIONS
+	// =========================================================
+
+	function setupCameras():Void
+	{
+		uiCamera = new FlxCamera();
+		gameCamera = new FlxCamera();
+		subStateCamera = new FlxCamera();
+		uiCamera.bgColor.alpha = 0;
+		subStateCamera.bgColor.alpha = 0;
+		gameCamera.bgColor = FlxColor.fromRGB(140, 242, 255);
+		FlxG.cameras.add(gameCamera);
+		FlxG.cameras.add(uiCamera, false);
+		FlxG.cameras.add(subStateCamera, false);
+	}
+
+	function registerEntities():Void
+	{
+		for (asset in Assets.list())
+		{
+			if (asset.indexOf('assets/entities/metadata/') == 0)
+			{
+				var id:String = AssetUtil.removeFileExtension(AssetUtil.getFileNameFromPath(asset)); // The ID is the file name
+				registeredEntities.set(id, AssetUtil.getJsonData(asset)); // TODO: Fix null data on desktop?????
+			}
+		}
+		trace(registeredEntities);
+	}
+
+	//
+	// UPDATE FUNCTIONS
+	// ==============================================================
+
+	function checkForDragging():Void
+	{
+		if (FlxG.mouse.pressedRight && canInteract)
+		{
+			// For dragging around the map
+			if (!isDragging)
+			{
+				// Start dragging
+				isDragging = true;
+				lastMousePos.set(FlxG.mouse.viewX, FlxG.mouse.viewY);
+			}
+			else
+			{
+				// Calculate mouse movement delta
+				var dx = FlxG.mouse.viewX - lastMousePos.x;
+				var dy = FlxG.mouse.viewY - lastMousePos.y;
+
+				// Move the camera
+				gameCamera.scroll.x -= dx;
+				gameCamera.scroll.y -= dy;
+
+				// Update last mouse position
+				lastMousePos.set(FlxG.mouse.viewX, FlxG.mouse.viewY);
+			}
+		}
+		else
+		{
+			isDragging = false;
+		}
+	}
+
+	function updateCameraZoomsAndScrolls(elapsed:Float):Void
+	{
+		// Multiplies by the current state of the wheel during the current frame
+		currentZoom += #if desktop 0.175 #else 0.0015 #end * FlxG.mouse.wheel;
+		if (currentZoom < 0.3)
+		{
+			currentZoom = 0.3;
+		}
+		else if (currentZoom > 3)
+		{
+			currentZoom = 3;
+		}
+
+		// Zoom the camera back in when it adds zoom
+		// (I stole this from FNF Psych Engine lol)
+		gameCamera.zoom = FlxMath.lerp(currentZoom, gameCamera.zoom, Math.exp(-elapsed * 4.765));
+		uiCamera.zoom = FlxMath.lerp(1.0, uiCamera.zoom, Math.exp(-elapsed * 3.125));
+
+		// Move the UI camera based on the mouse position
+		uiCamera.scroll.x = FlxMath.lerp(uiCamera.scroll.x, (FlxG.mouse.viewX - (FlxG.width / 2)) * 0.03, (1 / 30) * 240 * elapsed);
+		uiCamera.scroll.y = FlxMath.lerp(uiCamera.scroll.y, (FlxG.mouse.viewY - 6 - (FlxG.height / 2)) * 0.03, (1 / 30) * 240 * elapsed);
+	}
+
+	//
+	// UTILITY FUNCTIONS
+	// =====================================================
 
 	function screenShake(elapsed:Float):Void
 	{

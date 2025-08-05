@@ -433,17 +433,17 @@ final class FlixelUtil
 	 * Tweens an `FlxTypedGroup<FlxSprite>`'s members with ease.
 	 * 
 	 * @param group    The group to tween.
-	 * @param options  Dynamic object with the attributes to tween.
+	 * @param values   Dynamic object with the attributes to tween.
 	 * @param duration How long the tween should last for.
-	 * @param types    The types and eases for the group to tween with.
+	 * @param options  The types and eases for the group to tween with.
 	 */
-	public static function tweenSpriteGroup(group:FlxTypedGroup<FlxSprite>, options:Dynamic, duration:Float, types:Dynamic):Void
+	public static function tweenSpriteGroup(group:FlxTypedGroup<FlxSprite>, values:Dynamic, duration:Float, ?options:TweenOptions):Void
 	{
 		for (obj in group.members)
 		{
 			if (obj != null)
 			{
-				FlxTween.tween(obj, options, duration, types);
+				FlxTween.tween(obj, values, duration, options);
 			}
 		}
 	}

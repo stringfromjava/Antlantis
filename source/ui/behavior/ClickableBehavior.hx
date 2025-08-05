@@ -114,32 +114,39 @@ class ClickableBehavior
 	{
 		if (isHoveringOverMouse())
 		{
-			if (!isHovered)
+			if (canClick)
 			{
-				if (displayHoverCursor)
+				if (!isHovered)
 				{
-					Mouse.cursor = hoverCursor;
+					if (displayHoverCursor)
+					{
+						Mouse.cursor = hoverCursor;
+					}
+					isHovered = true;
+					onHover();
+					if (hoverSound != '' && hoverSound != null)
+					{
+						FlxG.sound.play(hoverSound);
+					}
 				}
-				isHovered = true;
-				onHover();
-				if (hoverSound != '' && hoverSound != null)
+
+				if (FlxG.mouse.justPressed)
 				{
-					FlxG.sound.play(hoverSound);
+					if (displayHoverCursor && resetCursorOnClick)
+					{
+						Mouse.cursor = MouseCursor.ARROW;
+					}
+					isFocused = true;
+					onClick();
+					if (clickSound != '' && clickSound != null)
+					{
+						FlxG.sound.play(clickSound);
+					}
 				}
 			}
-
-			if (FlxG.mouse.justPressed)
+			else
 			{
-				if (displayHoverCursor && resetCursorOnClick)
-				{
-					Mouse.cursor = MouseCursor.ARROW;
-				}
-				isFocused = true;
-				onClick();
-				if (clickSound != '' && clickSound != null)
-				{
-					FlxG.sound.play(clickSound);
-				}
+				Mouse.cursor = MouseCursor.ARROW;
 			}
 		}
 		else if (FlxG.mouse.justPressed && isFocused)
@@ -148,14 +155,22 @@ class ClickableBehavior
 			onUnclick();
 		}
 
-		if (!isHoveringOverMouse() && isHovered)
+		if (canClick)
+		{
+			if (!isHoveringOverMouse() && isHovered)
+			{
+				isHovered = false;
+				if (displayHoverCursor)
+				{
+					Mouse.cursor = MouseCursor.ARROW;
+				}
+				onHoverLost();
+			}
+		}
+		else
 		{
 			isHovered = false;
-			if (displayHoverCursor)
-			{
-				Mouse.cursor = MouseCursor.ARROW;
-			}
-			onHoverLost();
+			Mouse.cursor = MouseCursor.ARROW;
 		}
 	}
 

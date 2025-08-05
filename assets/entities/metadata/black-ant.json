@@ -1,0 +1,11 @@
+{
+  "name": "Black Ant",
+  "health": 10.0,
+  "strength": 0.0,
+  "type": "WORKER",
+  "ishostile": false,
+  "activehours": [
+    400.0,
+    900.0
+  ]
+}

@@ -98,14 +98,14 @@ final class PathUtil
 	}
 
 	/**
-	 * Get the texture spritesheet of a specific type of tile.
+	 * Get the metadata of an entity.
 	 * 
-	 * @param type The type of tile (e.g. `grass`, `rocky_dirt`, etc.).
-	 * @return The path of the tile.
+	 * @param id The ID of the entity (e.g. `black-ant`).
+	 * @return The path of the entity.
 	 */
-	public static inline function ofTileTexture(type:String):String
+	public static inline function ofEntityMetadata(id:String):String
 	{
-		return 'assets/tiles/textures/$type.png';
+		return 'assets/entities/metadata/$id.json';
 	}
 
 	/**

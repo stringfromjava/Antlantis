@@ -13,6 +13,18 @@ final class AssetUtil
 	function new() {}
 
 	/**
+	 * Get's the file name from the path provided.
+	 * 
+	 * @param fileName The path.
+	 * @return The file from the path.
+	 */
+	public static function getFileNameFromPath(filePath:String):String
+	{
+		var splitPath:Array<String> = filePath.split('/');
+		return splitPath[splitPath.length - 1];
+	}
+
+	/**
 	 * Removes the file extension from the passed down file name.
 	 * 
 	 * @param fileName The file name.

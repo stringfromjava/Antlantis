@@ -1,6 +1,7 @@
 // public car
 package play.substates;
 
+import ui.UIClickableText;
 import backend.util.FlixelUtil;
 import flixel.util.FlxSpriteUtil;
 import flixel.FlxCamera;
@@ -21,7 +22,7 @@ import menus.MainMenuState;
 class PauseSubState extends FlxSubState
 {
 	var cam:FlxCamera;
-	var buttonsGroup:FlxTypedGroup<FlxSprite>;
+	var buttonsGroup:FlxTypedGroup<UIClickableSprite>;
 	var buttonIds:Array<String> = ['back-to-game', 'quit'];
 	var createButtonsTimer:FlxTimer;
 
@@ -29,6 +30,8 @@ class PauseSubState extends FlxSubState
 	var hintText:FlxText;
 	var bg:FlxSprite;
 	var buttonsBg:FlxSprite;
+
+	var isUnpausing:Bool = false;
 
 	var hints:Array<String> = [
 		'Press "ESCAPE" to unpause or "Q" to quit!',
@@ -95,11 +98,11 @@ class PauseSubState extends FlxSubState
 		hintText.alpha = 0;
 		hintText.font = PathUtil.ofFont('vcr');
 		hintText.setBorderStyle(OUTLINE, FlxColor.BLACK, 1);
-		hintText.setPosition(0, cam.height - hintText.height);
+		hintText.setPosition(8, cam.height - hintText.height - 8);
 		hintText.cameras = [cam];
 		add(hintText);
 
-		buttonsGroup = new FlxTypedGroup<FlxSprite>();
+		buttonsGroup = new FlxTypedGroup<UIClickableSprite>();
 		add(buttonsGroup);
 
 		FlxTween.tween(bg, {alpha: 0.65}, 0.43, {
@@ -144,6 +147,13 @@ class PauseSubState extends FlxSubState
 
 	function backToGame():Void
 	{
+		if (isUnpausing)
+		{
+			return;
+		}
+
+		isUnpausing = true;
+
 		// Cancel all current tweens
 		createButtonsTimer.cancel();
 		FlxTween.cancelTweensOf(buttonsBg);
@@ -151,14 +161,14 @@ class PauseSubState extends FlxSubState
 		FlxTween.cancelTweensOf(gamePausedText);
 		for (b in buttonsGroup)
 		{
+			b.behavior.canClick = false;
 			FlxTween.cancelTweensOf(b);
+			FlxTween.tween(b, {x: cam.width + 15, alpha: 0}, 0.16, {
+				ease: FlxEase.quadOut
+			});
 		}
 
 		FlxTween.tween(buttonsBg, {x: Std.int(FlxG.width + 100), alpha: 0}, 0.43, {
-			ease: FlxEase.quadOut
-		});
-		// Tween buttons
-		FlixelUtil.tweenSpriteGroup(buttonsGroup, {x: cam.width + 15, alpha: 0}, 0.16, {
 			ease: FlxEase.quadOut
 		});
 		FlxTween.tween(hintText, {alpha: 0}, 0.43, {

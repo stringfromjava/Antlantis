@@ -22,11 +22,15 @@ name = input('What would you like the name of the entity to be? (This is what th
 health = input('How much health should this entity have? (Must be an int or float) -> ')
 strength = input('How much damage should this entity do? (Anything <= 0 will make it run away when danger is near) -> ')
 entity_type = input('What type should the entity be? (Check "valid_types" in this script for valid entity types) -> ')
-is_hostile = input('Is this entity hostile towards other entities? (A.K.A. is it an enemy? If "y" then "worker" is ignored and the entity\'s behavior is defined by code) [y/n] -> ')
+is_hostile = input('Is this entity hostile towards other entities? (A.K.A. is it an enemy? If "y" then "type" is ignored and the entity\'s behavior is defined by code) [y/n] -> ')
 active_hours = input('What hours should the entity be active? (If it is hostile, this is the times it can attack. Separate two ints/floats by a comma. First number is the start, second is end) -> ')
 
 health = check_valid_number(health, 'The health provided isn\'t a valid number.')
 strength = check_valid_number(strength, 'The strength provided isn\'t a valid number.')
+
+entity_type = entity_type.lower().strip()
+if valid_types.index(entity_type) == -1:
+    crash('The entity type provided is not valid.')
 
 is_hostile = is_hostile.lower().strip()
 if is_hostile == 'y':
@@ -36,12 +40,8 @@ elif is_hostile == 'n':
 else:
     crash('The value provided for its hostility isn\'t valid (must be "y" or "n").')
 
-if not is_hostile:
-    entity_type = entity_type.lower().strip()
-    if valid_types.index(entity_type) == -1:
-        crash('The entity type provided is not valid.')
-else:
-    entity_type = None
+if entity_type == 'ENEMY':
+    is_hostile = True
 
 active_hours = active_hours.split(',')
 
@@ -67,7 +67,7 @@ data = {
     'name': name,
     'health': health,
     'strength': strength,
-    'type': entity_type,
+    'type': entity_type.upper(),
     'ishostile': is_hostile,
     'activehours': [s, e]
 }

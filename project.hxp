@@ -413,29 +413,35 @@ class Project extends HXProject
 
 	function configureAssets()
 	{
+		var embedAssets:Bool = isWeb();
+		var preloadAssets:Bool = !isWeb();
+
+		// Create the default library
+		addAssetLibrary('default', embedAssets, true);
+
 		// Add font assets
-		addAssetPath('assets/fonts', 'assets/fonts', 'default', ['*.ttf'], []);
+		addAssetPath('assets/fonts', 'assets/fonts', 'default', ['*.ttf'], [], embedAssets);
 
 		// Add the entity assets
-		addAssetPath('assets/entities', 'assets/entities', 'default', ['*.png', '*.xml'], []);
+		addAssetPath('assets/entities', 'assets/entities', 'default', ['*.png', '*.xml', '*.json'], [], embedAssets);
 
 		// Add shared image assets
-		addAssetPath('assets/shared/images', 'assets/shared/images', 'default', ['*.png'], []);
+		addAssetPath('assets/shared/images', 'assets/shared/images', 'default', ['*.png'], [], embedAssets);
 
 		// Add the very funi esatr egs
-		addAssetPath('assets/shhhhhh', 'assets/shhhhhh', 'default', ['*.png', '*.gif', '*.mp4'], []);
+		addAssetPath('assets/shhhhhh', 'assets/shhhhhh', 'default', ['*.png', '*.gif', '*.mp4'], [], embedAssets);
 
 		// Add shared music and sound assets for web (.mp3)
 		// (or .ogg if it is on desktop)
 		if (isWeb())
 		{
-			addAssetPath('assets/shared/music', 'assets/shared/music', 'default', ['*.mp3'], ['*.ogg']);
-			addAssetPath('assets/shared/sounds', 'assets/shared/sounds', 'default', ['*.mp3'], ['*.ogg']);
+			addAssetPath('assets/shared/music', 'assets/shared/music', 'default', ['*.mp3'], ['*.ogg'], embedAssets);
+			addAssetPath('assets/shared/sounds', 'assets/shared/sounds', 'default', ['*.mp3'], ['*.ogg'], embedAssets);
 		}
 		else if (isDesktop())
 		{
-			addAssetPath('assets/shared/music', 'assets/shared/music', 'default', ['*.ogg'], ['*.mp3']);
-			addAssetPath('assets/shared/sounds', 'assets/shared/sounds', 'default', ['*.ogg'], ['*.mp3']);
+			addAssetPath('assets/shared/music', 'assets/shared/music', 'default', ['*.ogg'], ['*.mp3'], embedAssets);
+			addAssetPath('assets/shared/sounds', 'assets/shared/sounds', 'default', ['*.ogg'], ['*.mp3'], embedAssets);
 		}
 
 		info('-------------------------------------------------------------');
