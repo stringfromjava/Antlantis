@@ -27,7 +27,10 @@ class TutorialSubState extends FlxSubState
 		'Sometimes, your anthill will be attacked by Antlions,
         Beetles, and even other kinds of ants!',
 		'When your anthill gets attacked, be sure to send your best ants at
-        the predators and keep your colony safe'
+        the predators and keep your colony safe',
+        'You can start by breeding some ants and having them dig
+        out rooms in the anthill to grow your colony',
+        'Good luck, and have fun!'
 	];
 
 	override function create()
