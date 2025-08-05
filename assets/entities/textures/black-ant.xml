@@ -1,6 +1,0 @@
-<?xml version='1.0' encoding='utf-8'?>
-<TextureAtlas imagePath="black-ant.png">
-    <SubTexture name="black-ant-idle_0" x="0" y="516" width="900" height="513" frameX="-32" frameY="-85" frameWidth="971" frameHeight="610" />
-    <SubTexture name="black-ant-idle_1" x="901" y="0" width="900" height="515" frameX="-40" frameY="-90" frameWidth="971" frameHeight="610" />
-    <SubTexture name="black-ant-idle_2" x="0" y="0" width="901" height="516" frameX="-42" frameY="-90" frameWidth="971" frameHeight="610" />
-</TextureAtlas>

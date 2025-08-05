@@ -1,0 +1,15 @@
+<?xml version='1.0' encoding='utf-8'?>
+<TextureAtlas imagePath="black-ant.png">
+    <SubTexture name="black-ant-idle_0" x="1387" y="751" width="900" height="513" frameX="-32" frameY="-85" frameWidth="971" frameHeight="610" />
+    <SubTexture name="black-ant-idle_1" x="2764" y="1226" width="900" height="515" frameX="-40" frameY="-90" frameWidth="971" frameHeight="610" />
+    <SubTexture name="black-ant-idle_2" x="2764" y="710" width="901" height="516" frameX="-42" frameY="-90" frameWidth="971" frameHeight="610" />
+    <SubTexture name="black-ant-walk_0" x="0" y="0" width="1376" height="751" frameX="-197" frameY="-178" frameWidth="1920" frameHeight="1080" />
+    <SubTexture name="black-ant-walk_1" x="1376" y="0" width="1388" height="732" frameX="-195" frameY="-177" frameWidth="1920" frameHeight="1080" />
+    <SubTexture name="black-ant-walk_2" x="0" y="751" width="1387" height="732" frameX="-196" frameY="-177" frameWidth="1920" frameHeight="1080" />
+    <SubTexture name="black-ant-walk_3" x="0" y="1483" width="1458" height="721" frameX="-195" frameY="-177" frameWidth="1920" frameHeight="1080" />
+    <SubTexture name="black-ant-walk_4" x="2764" y="0" width="1515" height="710" frameX="-197" frameY="-177" frameWidth="1920" frameHeight="1080" />
+    <SubTexture name="black-ant-walk_5" x="3665" y="710" width="538" height="284" frameX="-73" frameY="-56" frameWidth="666" frameHeight="375" />
+    <SubTexture name="black-ant-walk_6" x="3664" y="1226" width="508" height="281" frameX="-73" frameY="-56" frameWidth="666" frameHeight="375" />
+    <SubTexture name="black-ant-walk_7" x="2764" y="1741" width="499" height="275" frameX="-65" frameY="-56" frameWidth="666" frameHeight="375" />
+    <SubTexture name="black-ant-walk_8" x="3263" y="1741" width="490" height="260" frameX="-73" frameY="-56" frameWidth="666" frameHeight="375" />
+</TextureAtlas>

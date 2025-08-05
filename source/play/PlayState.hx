@@ -43,15 +43,11 @@ class PlayState extends FlxState
 	//
 	// TEXT DISPLAYS
 	// =======================================
-	var totalAntDisplay:FlxText;
-	var blackAntDisplay:FlxText;
-	var brownAntDisplay:FlxText;
-	var redAntDisplay:FlxText;
 
 	//
 	// UI
 	// ========================
-	var closedJournal:UIClickableSprite;
+	var journal:UIClickableSprite;
 
 	//
 	// EXTRAS
@@ -75,13 +71,13 @@ class PlayState extends FlxState
 	 */
 	public var registeredEntities:Map<String, Entity> = [];
 
+	/**
+	 * How much time has passed in seconds.
+	 */
+	public var timeElapsed:Float = 0;
+
 	var canInteract:Bool = true; // Can the user do basic things, such as dragging, interacting with entities, zooming, etc?
-	var totalAnts:Int = 0;
-	var blackAnts:Int = 0;
-	var brownAnts:Int = 0;
-	var redAnts:Int = 0;
 	var currentZoom:Float = 1.0;
-	var timeElapsed:Float = 1;
 
 	var mario:FlxSprite;
 
@@ -93,7 +89,6 @@ class PlayState extends FlxState
 		lastMousePos = new FlxPoint();
 
 		setupCameras();
-		registerEntities();
 
 		mario = new FlxSprite();
 		mario.loadGraphic(PathUtil.ofSharedImage('mario'));
@@ -101,33 +96,6 @@ class PlayState extends FlxState
 		mario.screenCenter(XY);
 		mario.cameras = [gameCamera];
 		add(mario);
-
-		totalAntDisplay = new FlxText();
-		totalAntDisplay.text = 'Total Ants: $totalAnts';
-		totalAntDisplay.size = 64;
-		totalAntDisplay.cameras = [uiCamera];
-		add(totalAntDisplay);
-
-		blackAntDisplay = new FlxText();
-		blackAntDisplay.text = 'Black Ants: $blackAnts';
-		blackAntDisplay.size = 64;
-		blackAntDisplay.y = 50;
-		blackAntDisplay.cameras = [uiCamera];
-		add(blackAntDisplay);
-
-		brownAntDisplay = new FlxText();
-		brownAntDisplay.text = 'Brown Ants: $brownAnts';
-		brownAntDisplay.size = 64;
-		brownAntDisplay.y = 100;
-		brownAntDisplay.cameras = [uiCamera];
-		add(brownAntDisplay);
-
-		redAntDisplay = new FlxText();
-		redAntDisplay.text = 'Red Ants: $redAnts';
-		redAntDisplay.size = 64;
-		redAntDisplay.y = 150;
-		redAntDisplay.cameras = [uiCamera];
-		add(redAntDisplay);
 
 		openSubState(new TutorialSubState());
 	}
@@ -140,32 +108,6 @@ class PlayState extends FlxState
 
 		checkForDragging();
 		updateCameraZoomsAndScrolls(elapsed);
-
-		if (FlxG.keys.justPressed.B)
-		{
-			blackAnts += 1;
-		}
-
-		if (FlxG.keys.justPressed.L)
-		{
-			brownAnts += 1;
-		}
-
-		if (FlxG.keys.justPressed.R)
-		{
-			redAnts += 1;
-		}
-
-		if (FlxG.keys.justPressed.SPACE)
-		{
-			screenShake(elapsed);
-		}
-
-		totalAnts = blackAnts + brownAnts + redAnts;
-		totalAntDisplay.text = 'Total Ants: $totalAnts';
-		blackAntDisplay.text = 'Black Ants: $blackAnts';
-		brownAntDisplay.text = 'Brown Ants: $brownAnts';
-		redAntDisplay.text = 'Red Ants: $redAnts';
 
 		// Check if the user wants to pause the game
 		if (FlxG.keys.justPressed.ESCAPE)
@@ -235,19 +177,6 @@ class PlayState extends FlxState
 		FlxG.cameras.add(subStateCamera, false);
 	}
 
-	function registerEntities():Void
-	{
-		for (asset in Assets.list())
-		{
-			if (asset.indexOf('assets/entities/metadata/') == 0)
-			{
-				var id:String = AssetUtil.removeFileExtension(AssetUtil.getFileNameFromPath(asset)); // The ID is the file name
-				registeredEntities.set(id, AssetUtil.getJsonData(asset)); // TODO: Fix null data on desktop?????
-			}
-		}
-		trace(registeredEntities);
-	}
-
 	//
 	// UPDATE FUNCTIONS
 	// ==============================================================
@@ -286,7 +215,7 @@ class PlayState extends FlxState
 	function updateCameraZoomsAndScrolls(elapsed:Float):Void
 	{
 		// Multiplies by the current state of the wheel during the current frame
-		currentZoom += #if desktop 0.175 #else 0.0015 #end * FlxG.mouse.wheel;
+		currentZoom += #if desktop 0.195 #else 0.0015 #end * FlxG.mouse.wheel;
 		if (currentZoom < 0.3)
 		{
 			currentZoom = 0.3;

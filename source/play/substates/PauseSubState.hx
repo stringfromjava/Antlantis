@@ -35,13 +35,21 @@ class PauseSubState extends FlxSubState
 
 	var hints:Array<String> = [
 		'Press "ESCAPE" to unpause or "Q" to quit!',
+
 		'// public car',
+
 		'Take a peep at the source code, you\nmight find something interesting!',
+
 		'"What the helli"',
+
 		'When assigning variables with objects,\ndon\'t forget the parenthesis (looking at YOU Jawless).',
+
 		'"How do you have 20 pairs of pants, and\n3 pairs of underwear?!"',
+
 		'You\'re dead built like an apple',
+
 		'"Careful with what you say buddy, the cock is WATCHING, and\nhe ain\'t take no prisoners, keep them cheeks TIGHT"',
+
 		'"What\'s a quote that I have that isn\'t, uhm, racist?" (:skull:)',
 		'Yo yo yo, what\'s good piggy gang.
 		So I heard some:
@@ -59,7 +67,24 @@ class PauseSubState extends FlxSubState
 
 		So get yo *"SuPeR sAiYaN :nerd:"*, Discord © gamin\'!
 		"Gurl, *S L A Y*" sayin\',
-		# offa my turf.'
+		# offa my turf.',
+
+		'Does anyone even read these???',
+
+		'"What if she\'s the one? *starts benching four o\' five*"',
+
+		'When first creating a world, make sure to find the nearest tree
+		and mine wood. Wait wrong game...',
+
+		'FRIDAY NIGHT FUNKIN\' ON TOP :fire:',
+
+		'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
+
+		'https://www.youtube.com/watch?v=u7yqMuHyhLY',
+
+		'Basket: You\'re gay as fuck, no homo
+		String: But I am gay /j
+		Basket: You fool, I said no homo, get trolled',
 	];
 
 	override function create()
