@@ -24,10 +24,12 @@ class OptionsMenuState extends FlxState
 		{
 			FlxG.sound.play(PathUtil.ofSharedSound('click'), ClientPrefs.getOption('clickVolume'));
 		}));
-		selectionList.add(new OptionCheckBox(20, 400, 'Fullscreen', 'fullscreen', () ->
+		selectionList.add(new OptionCheckBox(20, 350, 'Fullscreen', 'fullscreen', () ->
 		{
 			FlxG.fullscreen = ClientPrefs.getOption('fullscreen');
 		}));
+        selectionList.add(new OptionCheckBox(20, 500, 'Screen Shake', 'screenShake', false, null));
+        selectionList.add(new OptionNumberScroller(20, 650, 'Game Speed', 'gameSpeed', 0.1, 2.0, 0.1, 1, true, null));
 		add(selectionList);
 	}
 
@@ -39,5 +41,10 @@ class OptionsMenuState extends FlxState
 		{
 			FlxG.switchState(() -> new MainMenuState());
 		}
+
+        if(FlxG.keys.justPressed.T)
+        {
+            trace(ClientPrefs.getOption('gameSpeed'));
+        }
 	}
 }

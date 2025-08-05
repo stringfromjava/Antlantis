@@ -34,7 +34,9 @@ final class ClientPrefs
 		'discordRPC' => true,
 		'minimizeVolume' => true,
 		'fullscreen' => false,
-		'clickVolume' => 1.0
+		'clickVolume' => 1.0,
+		'screenShake' => true,
+		'gameSpeed' => 0.5
 	];
 
 	/**

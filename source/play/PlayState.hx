@@ -1,5 +1,6 @@
 package play;
 
+import backend.data.ClientPrefs;
 import backend.util.DataUtil;
 import play.entities.Entity;
 import backend.util.AssetUtil;
@@ -19,6 +20,8 @@ import flixel.text.FlxText;
 import play.substates.PauseSubState;
 import play.substates.TutorialSubState;
 import ui.UIClickableSprite;
+
+using StringTools;
 
 class PlayState extends FlxState
 {
@@ -78,6 +81,7 @@ class PlayState extends FlxState
 	var brownAnts:Int = 0;
 	var redAnts:Int = 0;
 	var currentZoom:Float = 1.0;
+	var timeElapsed:Float = 1;
 
 	var mario:FlxSprite;
 
@@ -131,6 +135,8 @@ class PlayState extends FlxState
 	override public function update(elapsed:Float)
 	{
 		super.update(elapsed);
+
+		timeElapsed += elapsed;
 
 		checkForDragging();
 		updateCameraZoomsAndScrolls(elapsed);
@@ -308,9 +314,12 @@ class PlayState extends FlxState
 	{
 		gameCamera.zoom += 0.025;
 		uiCamera.zoom += 0.03;
-		FlxTween.completeTweensOf(gameCamera);
-		FlxTween.completeTweensOf(uiCamera);
-		gameCamera.shake(0.0065, 0.078);
-		uiCamera.shake(0.009, 0.078);
+		if (ClientPrefs.getOption('screenShake'))
+		{
+			FlxTween.cancelTweensOf(gameCamera);
+			FlxTween.cancelTweensOf(uiCamera);
+			gameCamera.shake(0.0065, 0.078);
+			uiCamera.shake(0.009, 0.078);
+		}
 	}
 }
