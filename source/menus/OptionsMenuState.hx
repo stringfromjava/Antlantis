@@ -1,6 +1,10 @@
 // public car
 package menus;
 
+import backend.util.PathUtil;
+import ui.options.OptionNumberScroller;
+import ui.options.OptionCheckBox;
+import ui.options.OptionSelectionList;
 import ui.UIClickableText;
 import flixel.FlxG;
 import flixel.text.FlxText;
@@ -9,66 +13,31 @@ import backend.data.ClientPrefs;
 
 class OptionsMenuState extends FlxState
 {
-	var optionsText:FlxText;
-
-	var minimizeVolumeText:UIClickableText;
-	var minimizeVolume:Bool = ClientPrefs.getOption('minimizeVolume');
-	var fullscreenText:UIClickableText;
-	var fullscreenBool:Bool = false;
+	var selectionList:OptionSelectionList;
 
 	override function create()
 	{
 		super.create();
 
-		optionsText = new FlxText();
-		optionsText.text = 'Options Menu';
-		optionsText.size = 100;
-		optionsText.screenCenter(X);
-		add(optionsText);
-
-		minimizeVolumeText = new UIClickableText();
-		minimizeVolumeText.text = 'Lower Volume When Unfocused: $minimizeVolume';
-		minimizeVolumeText.size = 64;
-		minimizeVolumeText.screenCenter(X);
-		minimizeVolumeText.y = 150;
-		minimizeVolumeText.behavior.updateHoverBounds(minimizeVolumeText.x, minimizeVolumeText.y, minimizeVolumeText.width, minimizeVolumeText.height);
-		minimizeVolumeText.behavior.onClick = () ->
+		selectionList = new OptionSelectionList(STICK_OUT, LEFT, 30);
+		selectionList.add(new OptionNumberScroller(20, 200, 'Click Sound Volume', 'clickVolume', 0.0, 1.0, 0.1, 0, true, () ->
 		{
-			minimizeVolume = !minimizeVolume;
-			ClientPrefs.setOption('minimizeVolume', minimizeVolume);
-			minimizeVolumeText.text = 'Lower Volume When Unfocused: $minimizeVolume';
-		};
-		add(minimizeVolumeText);
-
-		fullscreenText = new UIClickableText();
-		fullscreenText.text = 'Fullscreen: $fullscreenBool';
-		fullscreenText.size = 64;
-		fullscreenText.screenCenter(X);
-		fullscreenText.y = 200;
-		fullscreenText.behavior.updateHoverBounds(fullscreenText.x, fullscreenText.y, fullscreenText.width, fullscreenText.height);
-		fullscreenText.behavior.onClick = () ->
+			FlxG.sound.play(PathUtil.ofSharedSound('click'), ClientPrefs.getOption('clickVolume'));
+		}));
+		selectionList.add(new OptionCheckBox(20, 400, 'Fullscreen', 'fullscreen', () ->
 		{
-			fullscreenBool = !fullscreenBool;
-			FlxG.fullscreen = fullscreenBool;
-		};
-		add(fullscreenText);
+			FlxG.fullscreen = ClientPrefs.getOption('fullscreen');
+		}));
+		add(selectionList);
 	}
 
 	override function update(elapsed:Float)
 	{
 		super.update(elapsed);
 
-		if (FlxG.keys.justPressed.P)
-		{
-			ClientPrefs.setOption('minimizeVolume', !ClientPrefs.getOption('minimizeVolume'));
-		}
-
 		if (FlxG.keys.justPressed.ESCAPE)
 		{
 			FlxG.switchState(() -> new MainMenuState());
 		}
-
-		minimizeVolumeText.text = 'Lower Volume When Unfocused: $minimizeVolume';
-		fullscreenText.text = 'Fullscreen: $fullscreenBool';
 	}
 }

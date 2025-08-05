@@ -129,7 +129,7 @@ class InitState extends FlxState
 				clickSpr.updateHitbox();
 				clickSpr.setPosition(FlxG.mouse.viewX - (clickSpr.width / 2), FlxG.mouse.viewY - (clickSpr.height / 2));
 				FlxG.state.add(clickSpr);
-				FlxG.sound.play(PathUtil.ofSharedSound('click'), 0.75, () ->
+				FlxG.sound.play(PathUtil.ofSharedSound('click'), ClientPrefs.getOption('clickVolume'), () ->
 				{
 					FlxG.state.remove(clickSpr, true);
 				});

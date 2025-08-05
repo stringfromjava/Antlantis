@@ -48,6 +48,8 @@ final class Constants
 	 */
 	public static final VALID_SAVE_FILE_CHARACTERS:String = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890_';
 
+	public static final OPTION_DISPLAY_TEXT_SIZE:Int = 64;
+
 	//
 	// API
 	// =============================

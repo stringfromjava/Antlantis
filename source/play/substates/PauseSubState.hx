@@ -44,22 +44,22 @@ class PauseSubState extends FlxSubState
 		'"Careful with what you say buddy, the cock is WATCHING, and\nhe ain\'t take no prisoners, keep them cheeks TIGHT"',
 		'"What\'s a quote that I have that isn\'t, uhm, racist?" (:skull:)',
 		'Yo yo yo, what\'s good piggy gang.
-			So I heard some:
-			* **BOOTY SNIFFIN\'**,
-			* **OPPOSITION**,
-			* **"I LIKE TO TEXT MY *DISCORD KITTEN*™ :nerd:"**
-			lookin\' ahh mufucka, is messin\' with the barn...
-			*So*...
-			This, is your *only*, warnin\'...
-			My name... is ***Piggy_G***,
-			I\'m a real gangster,
-			I stay on all fours (no homo),
-			and if you mess with the barn, *man*,
-			I will attack yo farm.
+		So I heard some:
+		* **BOOTY SNIFFIN\'**,
+		* **OPPOSITION**,
+		* **"I LIKE TO TEXT MY *DISCORD KITTEN*™ :nerd:"**
+		lookin\' ahh mufucka, is messin\' with the barn...
+		*So*...
+		This, is your *only*, warnin\'...
+		My name... is ***Piggy_G***,
+		I\'m a real gangster,
+		I stay on all fours (no homo),
+		and if you mess with the barn, *man*,
+		I will attack yo farm.
 
-			So get yo *"SuPeR sAiYaN :nerd:"*, Discord © gamin\'!
-			"Gurl, *S L A Y*" sayin\',
-			# offa my turf.'
+		So get yo *"SuPeR sAiYaN :nerd:"*, Discord © gamin\'!
+		"Gurl, *S L A Y*" sayin\',
+		# offa my turf.'
 	];
 
 	override function create()
@@ -139,6 +139,10 @@ class PauseSubState extends FlxSubState
 		if (FlxG.keys.justPressed.ESCAPE)
 		{
 			backToGame();
+		}
+		if (FlxG.keys.justPressed.Q)
+		{
+			FlxG.switchState(() -> new MainMenuState());
 		}
 
 		cam.scroll.x = FlxMath.lerp(cam.scroll.x, (FlxG.mouse.viewX - (FlxG.width / 2)) * 0.025, (1 / 30) * 240 * elapsed);

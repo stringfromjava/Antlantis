@@ -31,11 +31,10 @@ final class ClientPrefs
 	 * is missing anything important.
 	 */
 	static final DEFAULT_OPTIONS:Map<String, Any> = [
-		// Misc.
 		'discordRPC' => true,
 		'minimizeVolume' => true,
-		// Debug
-		'editorFilters' => true
+		'fullscreen' => false,
+		'clickVolume' => 1.0
 	];
 
 	/**
