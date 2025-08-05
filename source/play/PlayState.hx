@@ -136,7 +136,7 @@ class PlayState extends FlxState
 	{
 		super.update(elapsed);
 
-		timeElapsed += elapsed;
+		timeElapsed += elapsed * ClientPrefs.getOption('gameSpeed');
 
 		checkForDragging();
 		updateCameraZoomsAndScrolls(elapsed);
