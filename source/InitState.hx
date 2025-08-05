@@ -1,5 +1,7 @@
+// public car
 package;
 
+import flixel.FlxSprite;
 #if web
 import js.Browser;
 #end
@@ -24,10 +26,10 @@ class InitState extends FlxState
 	{
 		super.create();
 
-        LoggerUtil.initialize();
-        ClientPrefs.loadAll();
-        configureFlixelSettings();
-        addEventListeners();
+		LoggerUtil.initialize();
+		ClientPrefs.loadAll();
+		configureFlixelSettings();
+		addEventListeners();
 
 		#if web
 		var clickMeText:FlxText = new FlxText();
@@ -39,12 +41,13 @@ class InitState extends FlxState
 		#end
 
 		#if !web
-        FlxG.switchState(() -> new MainMenuState());
+		FlxG.switchState(() -> new MainMenuState());
 		#end
 	}
 
 	#if web
-	override function update(elapsed:Float) {
+	override function update(elapsed:Float)
+	{
 		super.update(elapsed);
 		if (FlxG.mouse.justPressed)
 		{
@@ -53,24 +56,25 @@ class InitState extends FlxState
 	}
 	#end
 
-    function configureFlixelSettings():Void
-    {
-        FlxG.autoPause = false;
-        FlxG.mouse.useSystemCursor = true;
-        FlxAssets.FONT_DEFAULT = PathUtil.ofFont('Orange Kid');
-        FlxAssets.defaultSoundExtension = #if web 'mp3' #else 'ogg' #end;
-		// Disable the right-click context menu for HTML5
-        #if html5
-        Browser.document.addEventListener('contextmenu', (e) ->
-        {
-            e.preventDefault();
-        });
-        #end
-    }
+	function configureFlixelSettings():Void
+	{
+		FlxG.autoPause = false;
+		FlxG.mouse.useSystemCursor = true;
+		FlxAssets.FONT_DEFAULT = PathUtil.ofFont('Orange Kid');
+		FlxAssets.defaultSoundExtension = #if web 'mp3' #else 'ogg' #end;
 
-    function addEventListeners():Void
-    {
-        #if desktop
+		// Disable the right-click context menu for HTML5
+		#if html5
+		Browser.document.addEventListener('contextmenu', (e) ->
+		{
+			e.preventDefault();
+		});
+		#end
+	}
+
+	function addEventListeners():Void
+	{
+		#if desktop
 		// Maximize/Minimize volume when the window is gets/loses focus
 		Application.current.window.onFocusIn.add(() ->
 		{
@@ -114,17 +118,27 @@ class InitState extends FlxState
 		});
 		#end
 
+		// Add a click animation and play a sound when the
+		// user clicks anywhere on the screen
 		FlxG.signals.postUpdate.add(() ->
 		{
 			if (FlxG.mouse.justPressed || FlxG.mouse.justPressedRight)
 			{
-				FlxG.sound.play(PathUtil.ofSharedSound('click'), 0.75);
+				var clickSpr:FlxSprite = new FlxSprite().loadGraphic(PathUtil.ofSharedImage('mario'));
+				clickSpr.setGraphicSize(20, 20);
+				clickSpr.updateHitbox();
+				clickSpr.setPosition(FlxG.mouse.viewX - (clickSpr.width / 2), FlxG.mouse.viewY - (clickSpr.height / 2));
+				FlxG.state.add(clickSpr);
+				FlxG.sound.play(PathUtil.ofSharedSound('click'), 0.75, () ->
+				{
+					FlxG.state.remove(clickSpr, true);
+				});
 			}
 		});
 
-        Application.current.window.onClose.add(() ->
-        {
-            FlixelUtil.closeGame(false);
-        });
-    }
+		Application.current.window.onClose.add(() ->
+		{
+			FlixelUtil.closeGame(false);
+		});
+	}
 }

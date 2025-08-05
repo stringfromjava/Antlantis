@@ -1,5 +1,6 @@
 package play;
 
+import flixel.tweens.FlxEase;
 import flixel.FlxSubState;
 import backend.util.PathUtil;
 import flixel.FlxSprite;
@@ -17,12 +18,20 @@ import ui.UIClickableSprite;
 
 class PlayState extends FlxState
 {
+	/**
+	 * The instance used to access the public attributes of
+	 * the play state from anywhere in the code.
+	 * 
+	 * (Thanks, once again, FNF for the idea lmao.)
+	 */
+	public static var instance:PlayState;
+
 	//
 	// CAMERAS
 	// ================================
-	var uiCamera:FlxCamera;
-	var gameCamera:FlxCamera;
-	var subStateCamera:FlxCamera;
+	public var uiCamera:FlxCamera;
+	public var gameCamera:FlxCamera;
+	public var subStateCamera:FlxCamera;
 
 	//
 	// TEXT DISPLAYS
@@ -45,17 +54,29 @@ class PlayState extends FlxState
 	//
 	// DATA
 	// ==============================
+
+	/**
+	 * Is the user currently dragging?
+	 * This can be set to `false` at any time to
+	 * stop the user from dragging and force them to
+	 * hold down RMB again.
+	 */
+	public var isDragging:Bool = false;
+
+	var canInteract:Bool = true; // Can the user do basic things, such as dragging, interacting with entities, zooming, etc?
 	var totalAnts:Int = 0;
 	var blackAnts:Int = 0;
 	var brownAnts:Int = 0;
 	var redAnts:Int = 0;
-	var isDragging:Bool = false;
+	var currentZoom:Float = 1.0;
 
 	var mario:FlxSprite;
 
 	override public function create()
 	{
 		super.create();
+
+		instance = this;
 
 		uiCamera = new FlxCamera();
 		gameCamera = new FlxCamera();
@@ -103,8 +124,6 @@ class PlayState extends FlxState
 		redAntDisplay.cameras = [uiCamera];
 		add(redAntDisplay);
 
-		trace('YO MOMMMMMAAA SOOOO BEEEEEGGGGG');
-
 		openSubState(new TutorialSubState());
 	}
 
@@ -112,7 +131,7 @@ class PlayState extends FlxState
 	{
 		super.update(elapsed);
 
-		if (FlxG.mouse.pressedRight)
+		if (FlxG.mouse.pressedRight && canInteract)
 		{
 			// For dragging around the map
 			if (!isDragging)
@@ -160,9 +179,25 @@ class PlayState extends FlxState
 			screenShake(elapsed);
 		}
 
+		// Multiplies by the current state of the wheel during the current frame
+		currentZoom += 0.15 * FlxG.mouse.wheel;
+		if (currentZoom < 0.3)
+		{
+			currentZoom = 0.3;
+		}
+		else if (currentZoom > 3)
+		{
+			currentZoom = 3;
+		}
+
 		// Zoom the camera back in when it adds zoom
-		gameCamera.zoom = FlxMath.lerp(1.0, gameCamera.zoom, Math.exp(-elapsed * 3.125));
+		// (I stole this from FNF Psych Engine lol)
+		gameCamera.zoom = FlxMath.lerp(currentZoom, gameCamera.zoom, Math.exp(-elapsed * 4.765));
 		uiCamera.zoom = FlxMath.lerp(1.0, uiCamera.zoom, Math.exp(-elapsed * 3.125));
+
+		// Move the UI camera based on the mouse position
+		uiCamera.scroll.x = FlxMath.lerp(uiCamera.scroll.x, (FlxG.mouse.viewX - (FlxG.width / 2)) * 0.03, (1 / 30) * 240 * elapsed);
+		uiCamera.scroll.y = FlxMath.lerp(uiCamera.scroll.y, (FlxG.mouse.viewY - 6 - (FlxG.height / 2)) * 0.03, (1 / 30) * 240 * elapsed);
 
 		totalAnts = blackAnts + brownAnts + redAnts;
 		totalAntDisplay.text = 'Total Ants: $totalAnts';
@@ -176,6 +211,23 @@ class PlayState extends FlxState
 			// SHE TOO BEEG !!!
 			openSubState(new PauseSubState());
 		}
+
+		// Check if the user is trying to reset the zoom and
+		// the dragged position of the game camera
+		if (FlxG.keys.pressed.CONTROL && FlxG.keys.justPressed.R)
+		{
+			isDragging = false;
+			canInteract = false;
+			currentZoom = 1;
+			FlxTween.tween(gameCamera.scroll, {x: 0, y: 0}, 0.42, {
+				ease: FlxEase.quadOut,
+				onComplete: (_) ->
+				{
+					canInteract = true;
+				}
+			});
+			FlxG.sound.play(PathUtil.ofSharedSound('woosh-short'));
+		}
 	}
 
 	override function onFocusLost()
@@ -184,14 +236,28 @@ class PlayState extends FlxState
 		openSubState(new PauseSubState());
 	}
 
-	override function openSubState(SubState:FlxSubState) {
+	override function openSubState(SubState:FlxSubState)
+	{
 		super.openSubState(SubState);
 		SubState.cameras = [subStateCamera];
+		FlxTween.num(FlxG.sound.music.volume, 0.2, 0.43, (v) ->
+		{
+			FlxG.sound.music.volume = v;
+		});
+	}
+
+	override function closeSubState()
+	{
+		super.closeSubState();
+		FlxTween.num(FlxG.sound.music.volume, 1, 0.43, (v) ->
+		{
+			FlxG.sound.music.volume = v;
+		});
 	}
 
 	function screenShake(elapsed:Float):Void
 	{
-		gameCamera.zoom += 0.015;
+		gameCamera.zoom += 0.025;
 		uiCamera.zoom += 0.03;
 		FlxTween.completeTweensOf(gameCamera);
 		FlxTween.completeTweensOf(uiCamera);

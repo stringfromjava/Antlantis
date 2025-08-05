@@ -1,6 +1,10 @@
 // public car
 package play.substates;
 
+import backend.util.FlixelUtil;
+import flixel.util.FlxSpriteUtil;
+import flixel.FlxCamera;
+import flixel.math.FlxMath;
 import backend.util.PathUtil;
 import ui.UIClickableSprite;
 import flixel.util.FlxTimer;
@@ -16,20 +20,55 @@ import menus.MainMenuState;
 
 class PauseSubState extends FlxSubState
 {
+	var cam:FlxCamera;
 	var buttonsGroup:FlxTypedGroup<FlxSprite>;
 	var buttonIds:Array<String> = ['back-to-game', 'quit'];
 	var createButtonsTimer:FlxTimer;
 
 	var gamePausedText:FlxText;
+	var hintText:FlxText;
 	var bg:FlxSprite;
 	var buttonsBg:FlxSprite;
+
+	var hints:Array<String> = [
+		'Press "ESCAPE" to unpause or "Q" to quit!',
+		'// public car',
+		'Take a peep at the source code, you\nmight find something interesting!',
+		'"What the helli"',
+		'When assigning variables with objects,\ndon\'t forget the parenthesis (looking at YOU Jawless).',
+		'"How do you have 20 pairs of pants, and\n3 pairs of underwear?!"',
+		'You\'re dead built like an apple',
+		'"Careful with what you say buddy, the cock is WATCHING, and\nhe ain\'t take no prisoners, keep them cheeks TIGHT"',
+		'"What\'s a quote that I have that isn\'t, uhm, racist?" (:skull:)',
+		'Yo yo yo, what\'s good piggy gang.
+			So I heard some:
+			* **BOOTY SNIFFIN\'**,
+			* **OPPOSITION**,
+			* **"I LIKE TO TEXT MY *DISCORD KITTEN*™ :nerd:"**
+			lookin\' ahh mufucka, is messin\' with the barn...
+			*So*...
+			This, is your *only*, warnin\'...
+			My name... is ***Piggy_G***,
+			I\'m a real gangster,
+			I stay on all fours (no homo),
+			and if you mess with the barn, *man*,
+			I will attack yo farm.
+
+			So get yo *"SuPeR sAiYaN :nerd:"*, Discord © gamin\'!
+			"Gurl, *S L A Y*" sayin\',
+			# offa my turf.'
+	];
 
 	override function create()
 	{
 		super.create();
 
+		PlayState.instance.isDragging = false;
+		cam = PlayState.instance.subStateCamera;
+
 		bg = new FlxSprite();
-		bg.makeGraphic(FlxG.width, FlxG.height);
+		bg.makeGraphic(FlxG.width * 2, FlxG.height * 2);
+		bg.screenCenter(XY);
 		bg.alpha = 0;
 		add(bg);
 
@@ -47,12 +86,26 @@ class PauseSubState extends FlxSubState
 		gamePausedText.setBorderStyle(OUTLINE, FlxColor.BLACK, 3);
 		gamePausedText.x = FlxG.width;
 		gamePausedText.y = 75;
+		gamePausedText.cameras = [cam];
 		add(gamePausedText);
+
+		hintText = new FlxText();
+		hintText.text = 'HINT: ${hints[FlxG.random.int(0, hints.length - 1)]}';
+		hintText.size = 16;
+		hintText.alpha = 0;
+		hintText.font = PathUtil.ofFont('vcr');
+		hintText.setBorderStyle(OUTLINE, FlxColor.BLACK, 1);
+		hintText.setPosition(0, cam.height - hintText.height);
+		hintText.cameras = [cam];
+		add(hintText);
 
 		buttonsGroup = new FlxTypedGroup<FlxSprite>();
 		add(buttonsGroup);
 
 		FlxTween.tween(bg, {alpha: 0.65}, 0.43, {
+			ease: FlxEase.quadInOut
+		});
+		FlxTween.tween(hintText, {alpha: 0.37}, 0.43, {
 			ease: FlxEase.quadInOut
 		});
 		FlxTween.tween(buttonsBg, {x: (FlxG.width - buttonsBg.width) - 50}, 1.2, {
@@ -84,10 +137,14 @@ class PauseSubState extends FlxSubState
 		{
 			backToGame();
 		}
+
+		cam.scroll.x = FlxMath.lerp(cam.scroll.x, (FlxG.mouse.viewX - (FlxG.width / 2)) * 0.025, (1 / 30) * 240 * elapsed);
+		cam.scroll.y = FlxMath.lerp(cam.scroll.y, (FlxG.mouse.viewY - 6 - (FlxG.height / 2)) * 0.025, (1 / 30) * 240 * elapsed);
 	}
 
 	function backToGame():Void
 	{
+		// Cancel all current tweens
 		createButtonsTimer.cancel();
 		FlxTween.cancelTweensOf(buttonsBg);
 		FlxTween.cancelTweensOf(bg);
@@ -97,16 +154,16 @@ class PauseSubState extends FlxSubState
 			FlxTween.cancelTweensOf(b);
 		}
 
-		FlxTween.tween(buttonsBg, {x: Std.int(FlxG.width + 100)}, 0.43, {
+		FlxTween.tween(buttonsBg, {x: Std.int(FlxG.width + 100), alpha: 0}, 0.43, {
 			ease: FlxEase.quadOut
 		});
 		// Tween buttons
-		for (b in buttonsGroup)
-		{
-			FlxTween.tween(b, {x: FlxG.width}, 0.16, {
-				ease: FlxEase.quadOut
-			});
-		}
+		FlixelUtil.tweenSpriteGroup(buttonsGroup, {x: cam.width + 15, alpha: 0}, 0.16, {
+			ease: FlxEase.quadOut
+		});
+		FlxTween.tween(hintText, {alpha: 0}, 0.43, {
+			ease: FlxEase.quadOut
+		});
 		FlxTween.tween(bg, {alpha: 0}, 0.43, {
 			ease: FlxEase.quadOut,
 			onComplete: (_) ->
@@ -114,15 +171,8 @@ class PauseSubState extends FlxSubState
 				close();
 			}
 		});
-		FlxTween.tween(gamePausedText, {x: FlxG.width}, 0.43, {
+		FlxTween.tween(gamePausedText, {x: cam.width + 15, alpha: 0}, 0.43, {
 			ease: FlxEase.quadOut
-		});
-
-		// Tween the music's volume back up
-		FlxTween.cancelTweensOf(FlxG.sound.music);
-		FlxTween.num(FlxG.sound.music.volume, 1, 0.43, (v) ->
-		{
-			FlxG.sound.music.volume = v;
 		});
 
 		FlxG.sound.play(PathUtil.ofSharedSound('woosh-short'));
@@ -130,6 +180,7 @@ class PauseSubState extends FlxSubState
 
 	function createTextButtons():Void
 	{
+		// Functions that get called when the buttons are clicked
 		var funcs:Map<String, Void->Void> = [
 			'back-to-game' => () ->
 			{
@@ -141,9 +192,9 @@ class PauseSubState extends FlxSubState
 			}
 		];
 
-		var newX:Float = FlxG.width - 290;
-		var newY:Float = (FlxG.height / 2) - 40;
-		var tweenTime:Float = 0.05;
+		// Create every button provided in the list of ID's
+		var newY:Float = (FlxG.height / 2) - 40; // Spacing between the buttons
+		var tweenTime:Float = 0.05; // For adding a small delay between the buttons being added
 		for (i in 0...buttonIds.length)
 		{
 			var id = buttonIds[i];
@@ -153,10 +204,19 @@ class PauseSubState extends FlxSubState
 			b.updateHitbox();
 			b.x = FlxG.width;
 			b.y = newY;
+			b.cameras = [cam];
 			b.behavior.onClick = funcs.get(id);
+			b.behavior.onHover = () ->
+			{
+				FlxSpriteUtil.setBrightness(b, 0.32);
+			};
+			b.behavior.onHoverLost = () ->
+			{
+				FlxSpriteUtil.setBrightness(b, 0);
+			};
 			buttonsGroup.add(b);
 
-			var targetX = (i == 1) ? (FlxG.width - 330) : newX; // Only change x for second button
+			var targetX = (i == 1) ? FlxG.width - 330 : FlxG.width - 290; // The second button's X value is lower
 
 			new FlxTimer().start(tweenTime, (_) ->
 			{

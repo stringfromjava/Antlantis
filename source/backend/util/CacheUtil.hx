@@ -1,6 +1,5 @@
+// public car
 package backend.util;
-
-import shaders.*;
 
 /**
  * Class that holds general, temporary data for pretty much anything.

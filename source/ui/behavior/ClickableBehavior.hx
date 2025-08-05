@@ -1,5 +1,7 @@
+// public car
 package ui.behavior;
 
+import backend.util.PathUtil;
 import openfl.ui.MouseCursor;
 import openfl.ui.Mouse;
 import flixel.FlxG;
@@ -91,7 +93,7 @@ class ClickableBehavior
 	/**
 	 * The sound that plays when `this` clickable object is hovered on.
 	 */
-	public var hoverSound:String = null;
+	public var hoverSound:String = PathUtil.ofSharedSound('hover');
 
 	/**
 	 * The sound that plays when `this` clickable object is clicked on.
