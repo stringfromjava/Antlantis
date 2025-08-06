@@ -1,6 +1,7 @@
 // public car
 package menus;
 
+import flixel.graphics.frames.FlxAtlasFrames;
 import lime.app.Application;
 import backend.util.PathUtil;
 import flixel.FlxSprite;
@@ -23,14 +24,36 @@ class MainMenuState extends FlxState
 	var playText:UIClickableText;
 	var gameQuitText:UIClickableText;
 	var optionsText:UIClickableText;
+	var bg:FlxSprite;
 
 	override function create()
 	{
 		super.create();
 		FlixelUtil.playMenuMusic();
 
+		var frames = [];
+		for (i in 0...6)
+		{
+			frames.push(i);
+		}
+		bg = new FlxSprite();
+		bg.frames = FlxAtlasFrames.fromSparrow('assets/shared/images/bg/clouds.png', 'assets/shared/images/bg/clouds.xml');
+		bg.animation.addByIndices('clouds_anim', 'clouds_', frames, '', 2, true);
+		bg.setSize(FlxG.width, FlxG.height);
+		bg.screenCenter(XY);
+		bg.animation.play('clouds_anim', true, false, 0);
+		add(bg);
+
 		buttonsGroup = new FlxSpriteGroup();
 		add(buttonsGroup);
+
+		
+
+		// trace(frames);
+		// trace(bg);
+		// trace(bg.frames);
+		// trace(bg.animation);
+
 
         logo = new FlxSprite();
         logo.loadGraphic(PathUtil.ofSharedImage('logo'));
@@ -43,6 +66,7 @@ class MainMenuState extends FlxState
 		playText = new UIClickableText();
 		playText.text = 'Play';
 		playText.size = 64;
+		playText.color = FlxColor.BLACK;
 		playText.x = FlxG.width/3;
 		playText.y = FlxG.height;
 		playText.behavior.updateHoverBounds(playText.x, playText.y, playText.width, playText.height);
@@ -55,6 +79,7 @@ class MainMenuState extends FlxState
 		gameQuitText = new UIClickableText();
 		gameQuitText.text = 'Quit';
 		gameQuitText.size = 64;
+		gameQuitText.color = FlxColor.BLACK;
 		gameQuitText.x = FlxG.width * 19/32;
 		gameQuitText.y = FlxG.height;
 		gameQuitText.behavior.updateHoverBounds(gameQuitText.x, gameQuitText.y, gameQuitText.width, gameQuitText.height);
@@ -67,6 +92,7 @@ class MainMenuState extends FlxState
 		optionsText = new UIClickableText();
 		optionsText.text = 'Options';
 		optionsText.size = 64;
+		optionsText.color = FlxColor.BLACK;
 		optionsText.x = FlxG.width * 7/16;
 		optionsText.y = FlxG.height;
 		optionsText.behavior.updateHoverBounds(optionsText.x, optionsText.y, optionsText.width, optionsText.height);

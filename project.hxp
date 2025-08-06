@@ -428,6 +428,9 @@ class Project extends HXProject
 		// Add shared image assets
 		addAssetPath('assets/shared/images', 'assets/shared/images', 'default', ['*.png'], [], embedAssets);
 
+		// Add shared xml assets for sprites
+		addAssetPath('assets/shared/images', 'assets/shared/images', 'default', ['*.png', '*.xml'], [], embedAssets);
+
 		// Add the very funi esatr egs
 		addAssetPath('assets/shhhhhh', 'assets/shhhhhh', 'default', ['*.png', '*.gif', '*.mp4'], [], embedAssets);
 

@@ -23,5 +23,6 @@ abstract class Entity extends FlxSpriteGroup
 		this.hp = hp;
 		this.activityStart = activityStart;
 		this.activityEnd = activityEnd;
+		bar = new FlxBar();
 	}
 }

@@ -1,9 +1,9 @@
 <?xml version='1.0' encoding='utf-8'?>
 <TextureAtlas imagePath="clouds.png">
-    <SubTexture name="clouds idle0000" x="0" y="0" width="1280" height="1280" frameX="0" frameY="0" frameWidth="1280" frameHeight="1280" />
-    <SubTexture name="clouds idle0001" x="1280" y="0" width="1280" height="1280" frameX="0" frameY="0" frameWidth="1280" frameHeight="1280" />
-    <SubTexture name="clouds idle0002" x="0" y="1280" width="1280" height="1280" frameX="0" frameY="0" frameWidth="1280" frameHeight="1280" />
-    <SubTexture name="clouds idle0003" x="1280" y="1280" width="1280" height="1280" frameX="0" frameY="0" frameWidth="1280" frameHeight="1280" />
-    <SubTexture name="clouds idle0004" x="2560" y="0" width="1280" height="1280" frameX="0" frameY="0" frameWidth="1280" frameHeight="1280" />
-    <SubTexture name="clouds idle0005" x="2560" y="1280" width="1280" height="1280" frameX="0" frameY="0" frameWidth="1280" frameHeight="1280" />
+    <SubTexture name="clouds_0" x="0" y="0" width="1280" height="1280" frameX="0" frameY="0" frameWidth="1280" frameHeight="1280" />
+    <SubTexture name="clouds_1" x="1280" y="0" width="1280" height="1280" frameX="0" frameY="0" frameWidth="1280" frameHeight="1280" />
+    <SubTexture name="clouds_2" x="0" y="1280" width="1280" height="1280" frameX="0" frameY="0" frameWidth="1280" frameHeight="1280" />
+    <SubTexture name="clouds_3" x="1280" y="1280" width="1280" height="1280" frameX="0" frameY="0" frameWidth="1280" frameHeight="1280" />
+    <SubTexture name="clouds_4" x="2560" y="0" width="1280" height="1280" frameX="0" frameY="0" frameWidth="1280" frameHeight="1280" />
+    <SubTexture name="clouds_5" x="2560" y="1280" width="1280" height="1280" frameX="0" frameY="0" frameWidth="1280" frameHeight="1280" />
 </TextureAtlas>
