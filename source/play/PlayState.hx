@@ -1,5 +1,7 @@
 package play;
 
+import play.substates.JournalSubState;
+import flixel.util.FlxSpriteUtil;
 import backend.data.ClientPrefs;
 import backend.util.DataUtil;
 import play.entities.Entity;
@@ -19,6 +21,8 @@ import flixel.FlxState;
 import flixel.text.FlxText;
 import play.substates.PauseSubState;
 import play.substates.TutorialSubState;
+import play.entities.Entity;
+import play.entities.Ant;
 import ui.UIClickableSprite;
 
 using StringTools;
@@ -96,6 +100,31 @@ class PlayState extends FlxState
 		mario.screenCenter(XY);
 		mario.cameras = [gameCamera];
 		add(mario);
+
+		journal = new UIClickableSprite();
+		journal.loadGraphic(PathUtil.ofSharedImage('journal-closed'));
+		journal.setGraphicSize(64, 64);
+		journal.updateHitbox();
+		journal.x = FlxG.width - journal.width;
+		journal.y = 0;
+		journal.behavior.updateHoverBounds(journal.x, journal.y, journal.width, journal.height);
+		journal.cameras = [uiCamera];
+		journal.behavior.onHover = () -> {
+			FlxSpriteUtil.setBrightness(journal, 0.32);
+		}
+		journal.behavior.onHoverLost = () -> {
+			FlxSpriteUtil.setBrightness(journal, 0);
+		}
+		journal.behavior.onClick = () -> {
+			
+		}
+		journal.behavior.onClick = () -> {
+			openSubState(new JournalSubState());
+		}
+		add(journal);
+
+		trace(journal.x);
+		trace(journal.y);
 
 		openSubState(new TutorialSubState());
 	}
