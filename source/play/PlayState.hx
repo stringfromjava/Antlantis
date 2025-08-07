@@ -1,5 +1,6 @@
 package play;
 
+import play.entities.Ant;
 import backend.data.ClientPrefs;
 import backend.util.DataUtil;
 import play.entities.Entity;
@@ -43,7 +44,6 @@ class PlayState extends FlxState
 	//
 	// TEXT DISPLAYS
 	// =======================================
-
 	//
 	// UI
 	// ========================
@@ -79,7 +79,7 @@ class PlayState extends FlxState
 	var canInteract:Bool = true; // Can the user do basic things, such as dragging, interacting with entities, zooming, etc?
 	var currentZoom:Float = 1.0;
 
-	var mario:FlxSprite;
+	var mario:Ant;
 
 	override public function create()
 	{
@@ -90,12 +90,23 @@ class PlayState extends FlxState
 
 		setupCameras();
 
-		mario = new FlxSprite();
-		mario.loadGraphic(PathUtil.ofSharedImage('mario'));
-		mario.setGraphicSize(150, 150);
+		mario = new Ant();
+		mario.sprite.animation.play('idle');
 		mario.screenCenter(XY);
 		mario.cameras = [gameCamera];
 		add(mario);
+
+		for (_ in 0...10)
+		{
+			var ant = new Ant();
+			ant.sprite.animation.play('idle');
+			ant.setPosition(
+				FlxG.random.float(0.0, 700.0),
+				FlxG.random.float(0.0, 700.0)
+			);
+			ant.cameras = [gameCamera];
+			add(ant);
+		}
 
 		openSubState(new TutorialSubState());
 	}

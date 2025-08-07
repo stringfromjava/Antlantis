@@ -1,11 +1,11 @@
 // public car
 package;
 
-import flixel.FlxSprite;
+import backend.api.DiscordClient;
 #if web
 import js.Browser;
-#end
 import flixel.text.FlxText;
+#end
 import backend.util.LoggerUtil;
 import flixel.tweens.FlxTween;
 import flixel.tweens.FlxTween.FlxTweenType;
@@ -27,6 +27,7 @@ class InitState extends FlxState
 		super.create();
 
 		LoggerUtil.initialize();
+		DiscordClient.initialize();
 		ClientPrefs.loadAll();
 		configureFlixelSettings();
 		addEventListeners();
@@ -124,15 +125,7 @@ class InitState extends FlxState
 		{
 			if (FlxG.mouse.justPressed || FlxG.mouse.justPressedRight)
 			{
-				var clickSpr:FlxSprite = new FlxSprite().loadGraphic(PathUtil.ofSharedImage('mario'));
-				clickSpr.setGraphicSize(20, 20);
-				clickSpr.updateHitbox();
-				clickSpr.setPosition(FlxG.mouse.viewX - (clickSpr.width / 2), FlxG.mouse.viewY - (clickSpr.height / 2));
-				FlxG.state.add(clickSpr);
-				FlxG.sound.play(PathUtil.ofSharedSound('click'), ClientPrefs.getOption('clickVolume'), () ->
-				{
-					FlxG.state.remove(clickSpr, true);
-				});
+				FlxG.sound.play(PathUtil.ofSharedSound('click'), ClientPrefs.getOption('clickVolume'));
 			}
 		});
 

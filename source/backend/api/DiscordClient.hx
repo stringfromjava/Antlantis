@@ -40,6 +40,7 @@ final class DiscordClient
 			Discord.Initialize(Constants.DISCORD_APP_ID, null, true, null);
 			// Start the timer (for the amount of time the player has played the game)
 			presence.startTimestamp = Math.floor(Sys.time());
+			presence.largeImageKey = 'logo';
 			// Start a thread that runs in the background which
 			// makes regular callbacks to Discord
 			Thread.create(() ->

@@ -59,7 +59,7 @@ final class Constants
 	 * "Activity" box, showing that they are playing Antlantis and
 	 * for displaying how long they have played it.
 	 */
-	public static final DISCORD_APP_ID:String = '';
+	public static final DISCORD_APP_ID:String = '1330433524016222208';
 
 	function new() {}
 }

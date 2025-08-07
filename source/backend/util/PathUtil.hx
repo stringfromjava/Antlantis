@@ -122,7 +122,7 @@ final class PathUtil
 	 */
 	public static inline function ofEntityTexture(name:String):Array<String>
 	{
-		return ['assets/entities/textures/$name.png', 'assets/entities/textures/$name.xml'];
+		return ['assets/entities/$name.png', 'assets/entities/$name.xml'];
 	}
 
 	/**
