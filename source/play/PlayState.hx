@@ -2,16 +2,10 @@ package play;
 
 import play.substates.JournalSubState;
 import flixel.util.FlxSpriteUtil;
-import play.entities.Ant;
 import backend.data.ClientPrefs;
-import backend.util.DataUtil;
-import play.entities.Entity;
-import backend.util.AssetUtil;
-import openfl.Assets;
 import flixel.tweens.FlxEase;
 import flixel.FlxSubState;
 import backend.util.PathUtil;
-import flixel.FlxSprite;
 import flixel.math.FlxPoint;
 import flixel.tweens.FlxTween;
 import flixel.math.FlxMath;
@@ -19,7 +13,6 @@ import flixel.util.FlxColor;
 import flixel.FlxCamera;
 import flixel.FlxG;
 import flixel.FlxState;
-import flixel.text.FlxText;
 import play.substates.PauseSubState;
 import play.substates.TutorialSubState;
 import play.entities.Entity;
@@ -102,28 +95,25 @@ class PlayState extends FlxState
 
 		journal = new UIClickableSprite();
 		journal.loadGraphic(PathUtil.ofSharedImage('journal-closed'));
-		journal.setGraphicSize(64, 64);
+		journal.scale.set(0.4, 0.4);
 		journal.updateHitbox();
 		journal.x = FlxG.width - journal.width;
 		journal.y = 0;
 		journal.behavior.updateHoverBounds(journal.x, journal.y, journal.width, journal.height);
 		journal.cameras = [uiCamera];
-		journal.behavior.onHover = () -> {
+		journal.behavior.onHover = () ->
+		{
 			FlxSpriteUtil.setBrightness(journal, 0.32);
-		}
-		journal.behavior.onHoverLost = () -> {
+		};
+		journal.behavior.onHoverLost = () ->
+		{
 			FlxSpriteUtil.setBrightness(journal, 0);
-		}
-		journal.behavior.onClick = () -> {
-			
-		}
-		journal.behavior.onClick = () -> {
+		};
+		journal.behavior.onClick = () ->
+		{
 			openSubState(new JournalSubState());
-		}
+		};
 		add(journal);
-
-		trace(journal.x);
-		trace(journal.y);
 
 		openSubState(new TutorialSubState());
 	}

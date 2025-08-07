@@ -1,15 +1,18 @@
 // public car
 package menus;
 
-import backend.util.PathUtil;
-import ui.options.OptionNumberScroller;
-import ui.options.OptionCheckBox;
-import ui.options.OptionSelectionList;
-import ui.UIClickableText;
-import flixel.FlxG;
-import flixel.text.FlxText;
-import flixel.FlxState;
+import backend.api.DiscordClient;
 import backend.data.ClientPrefs;
+import backend.util.PathUtil;
+import flixel.FlxG;
+import flixel.FlxState;
+import flixel.text.FlxText;
+import flixel.util.FlxStringUtil.LabelValuePair;
+import ui.UIClickableText;
+import ui.options.OptionCheckBox;
+import ui.options.OptionNumberScroller;
+import ui.options.OptionSelectionList;
+import ui.options.OptionStringScroller;
 
 class OptionsMenuState extends FlxState
 {
@@ -19,7 +22,7 @@ class OptionsMenuState extends FlxState
 	{
 		super.create();
 
-		selectionList = new OptionSelectionList(STICK_OUT, LEFT, 30);
+		selectionList = new OptionSelectionList(STICK_OUT, LEFT, 50);
 		selectionList.add(new OptionNumberScroller(20, 100, 'Click Sound Volume', 'clickVolume', 0.0, 1.0, 0.1, 0, true, () ->
 		{
 			FlxG.sound.play(PathUtil.ofSharedSound('click'), ClientPrefs.getOption('clickVolume'));
@@ -30,7 +33,18 @@ class OptionsMenuState extends FlxState
 		}));
         selectionList.add(new OptionCheckBox(20, 400, 'Screen Shake', 'screenShake', false, null));
         selectionList.add(new OptionNumberScroller(20, 550, 'Game Speed', 'gameSpeed', 0.1, 2.0, 0.1, 1, true, null));
-		selectionList.add(new OptionCheckBox(20, 700, 'Discord Presence', 'discordRPC', false, null));
+		selectionList.add(new OptionStringScroller(20, 700, 'Entity Health Display', 'entityHealthDisplay', [EntityHealthDisplayType.NONE, HOVER, ALWAYS]));
+		selectionList.add(new OptionCheckBox(20, 850, 'Discord Presence', 'discordRPC', false, () ->
+		{
+			if (ClientPrefs.getOption('discordRPC'))
+			{
+				DiscordClient.initialize();
+			}
+			else
+			{
+				DiscordClient.shutdown();
+			}
+		}));
 		add(selectionList);
 	}
 

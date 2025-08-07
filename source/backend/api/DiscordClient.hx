@@ -30,7 +30,7 @@ final class DiscordClient
 	public static function initialize():Void
 	{
 		#if DISCORD_RPC_ALLOWED
-		if (ClientPrefs.getOption('discordRPC'))
+		if (ClientPrefs.getOption('discordRPC') && isShutDown)
 		{
 			// Log info
 			LoggerUtil.log('Initializing Discord rich presence');

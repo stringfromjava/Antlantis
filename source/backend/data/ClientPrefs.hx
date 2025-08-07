@@ -8,6 +8,13 @@ import backend.util.SaveUtil;
 import flixel.FlxG;
 import flixel.util.FlxSave;
 
+enum EntityHealthDisplayType
+{
+	NONE;
+	HOVER;
+	ALWAYS;
+}
+
 /**
  * Class that handles, modifies and stores the user's
  * options and settings.
@@ -36,7 +43,8 @@ final class ClientPrefs
 		'fullscreen' => false,
 		'clickVolume' => 1.0,
 		'screenShake' => true,
-		'gameSpeed' => 0.5
+		'gameSpeed' => 1,
+		'entityHealthDisplay' => ALWAYS
 	];
 
 	/**
