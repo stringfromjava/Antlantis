@@ -17,6 +17,8 @@ class JournalSubState extends FlxSubState
 	{
 		super.create();
 
+		persistentUpdate = true;
+
 		bg = new FlxSprite();
 		bg.makeGraphic(FlxG.width * 2, FlxG.height * 2);
 		bg.screenCenter(XY);

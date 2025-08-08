@@ -1,40 +1,39 @@
 // public car
 package play.entities;
 
+import flixel.FlxG;
+import flixel.util.FlxTimer;
+import flixel.FlxSprite;
 import flixel.graphics.frames.FlxAtlasFrames;
 import backend.util.PathUtil;
 
-enum abstract AntType(String) from String to String
+class Ant extends FlxSprite
 {
-	public var WORKER:String = 'WORKER';
-	public var DEFENDER:String = 'DEFENDER';
-}
+	public var foodTimer:FlxTimer;
+	public var waterTimer:FlxTimer;
 
-class Ant extends Entity
-{
-	var type:AntType;
-
-	public function new( hp = 1.0, activityStart = 0.0, activityEnd = 1200.0, type = WORKER)
+	public function new()
 	{
 		var paths:Array<String> = PathUtil.ofEntityTexture('black-ant');
-		super(hp, activityStart, activityEnd);
-		this.type = type;
-		sprite.frames = FlxAtlasFrames.fromSparrow(paths[0], paths[1]);
-		sprite.animation.addByIndices('idle', 'black-ant-idle_', [0, 1, 2], '', 4);
-		sprite.animation.addByIndices('walk', 'black-ant-walk_', [0, 1, 2, 3, 4, 5, 6, 7, 8], '', 10);
-		sprite.scale.set(0.1, 0.1);
-		sprite.updateHitbox();
+		super();
+		frames = FlxAtlasFrames.fromSparrow(paths[0], paths[1]);
+		animation.addByIndices('idle', 'black-ant-idle_', [0, 1, 2], '', 4);
+		animation.addByIndices('walk', 'black-ant-walk_', [0, 1, 2, 3, 4, 5, 6, 7, 8], '', 10);
+		scale.set(0.1, 0.1);
+		updateHitbox();
+
+		foodTimer = new FlxTimer().start(FlxG.random.float(9, 16), (_) ->
+		{
+			PlayState.instance.food += FlxG.random.int(4, 8);
+		});
+		waterTimer = new FlxTimer().start(FlxG.random.float(4, 15), (_) ->
+		{
+			PlayState.instance.water += FlxG.random.int(5, 9);
+		});
 	}
 
 	override function update(elapsed:Float)
 	{
 		super.update(elapsed);
-
-		var te:Float = PlayState.instance.timeElapsed;
-
-		if (te > activityStart && te < activityEnd)
-		{
-
-		}
 	}
 }

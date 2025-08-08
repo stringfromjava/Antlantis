@@ -1,5 +1,6 @@
 // public car
 // everywhere i go... i see his face....
+// Jawless, you're gay, and we all know it
 package play.substates;
 
 import ui.UIClickableText;
@@ -49,9 +50,10 @@ class PauseSubState extends FlxSubState
 
 		'You\'re dead built like an apple',
 
-		'"Careful with what you say buddy, the cock is WATCHING, and\nhe ain\'t take no prisoners, keep them cheeks TIGHT"',
+		'Careful with what you say buddy, the cock is WATCHING, and\nhe ain\'t take no prisoners, keep them cheeks TIGHT',
 
 		'"What\'s a quote that I have that isn\'t, uhm, racist?" (:skull:)',
+
 		'Yo yo yo, what\'s good piggy gang.
 		So I heard some:
 		* **BOOTY SNIFFIN\'**,

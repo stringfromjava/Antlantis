@@ -1,5 +1,6 @@
 package play;
 
+import flixel.text.FlxText;
 import play.substates.JournalSubState;
 import flixel.util.FlxSpriteUtil;
 import backend.data.ClientPrefs;
@@ -15,7 +16,6 @@ import flixel.FlxG;
 import flixel.FlxState;
 import play.substates.PauseSubState;
 import play.substates.TutorialSubState;
-import play.entities.Entity;
 import play.entities.Ant;
 import ui.UIClickableSprite;
 
@@ -41,6 +41,10 @@ class PlayState extends FlxState
 	//
 	// TEXT DISPLAYS
 	// =======================================
+	var foodText:FlxText;
+	var waterText:FlxText;
+	var antsText:FlxText;
+
 	//
 	// UI
 	// ========================
@@ -63,15 +67,9 @@ class PlayState extends FlxState
 	 */
 	public var isDragging:Bool = false;
 
-	/**
-	 * All of the registered entities for the game.
-	 */
-	public var registeredEntities:Map<String, Entity> = [];
-
-	/**
-	 * How much time has passed in seconds.
-	 */
-	public var timeElapsed:Float = 0;
+	public var food:Int = 0;
+	public var water:Int = 0;
+	public var ants:Int = 0;
 
 	var canInteract:Bool = true; // Can the user do basic things, such as dragging, interacting with entities, zooming, etc?
 	var currentZoom:Float = 1.0;
@@ -88,10 +86,42 @@ class PlayState extends FlxState
 		setupCameras();
 
 		mario = new Ant();
-		mario.sprite.animation.play('idle');
+		mario.animation.play('idle');
 		mario.screenCenter(XY);
 		mario.cameras = [gameCamera];
 		add(mario);
+
+		foodText = new FlxText();
+		foodText.text = 'Food: $food';
+		foodText.size = 32;
+		foodText.color = 0xFF882E0A;
+		foodText.setBorderStyle(OUTLINE, FlxColor.WHITE, 2);
+		foodText.font = PathUtil.ofFont('vcr');
+		foodText.setPosition(10, 20);
+		foodText.cameras = [uiCamera];
+		add(foodText);
+
+		waterText = new FlxText();
+		waterText.text = 'Water: $water';
+		waterText.size = 32;
+		waterText.color = 0xFF0C6DA5;
+		waterText.setBorderStyle(OUTLINE, FlxColor.WHITE, 2);
+		waterText.borderColor = FlxColor.WHITE;
+		waterText.font = PathUtil.ofFont('vcr');
+		waterText.setPosition(10, (foodText.y + foodText.height));
+		waterText.cameras = [uiCamera];
+		add(waterText);
+
+		antsText = new FlxText();
+		antsText.text = 'Ants: $ants';
+		antsText.size = 32;
+		antsText.color = 0xFF212222;
+		antsText.setBorderStyle(OUTLINE, FlxColor.WHITE, 2);
+		antsText.borderColor = FlxColor.WHITE;
+		antsText.font = PathUtil.ofFont('vcr');
+		antsText.setPosition(10, (waterText.y + waterText.height));
+		antsText.cameras = [uiCamera];
+		add(antsText);
 
 		journal = new UIClickableSprite();
 		journal.loadGraphic(PathUtil.ofSharedImage('journal-closed'));
@@ -122,10 +152,13 @@ class PlayState extends FlxState
 	{
 		super.update(elapsed);
 
-		timeElapsed += elapsed * ClientPrefs.getOption('gameSpeed');
-
 		checkForDragging();
 		updateCameraZoomsAndScrolls(elapsed);
+
+		// Update the texts
+		foodText.text = 'Food: $food';
+		waterText.text = 'Water: $water';
+		antsText.text = 'Ants: $ants';
 
 		// Check if the user wants to pause the game
 		if (FlxG.keys.justPressed.ESCAPE)
@@ -137,11 +170,12 @@ class PlayState extends FlxState
 
 		// Check if the user is trying to reset the zoom and
 		// the dragged position of the game camera
-		if (FlxG.keys.pressed.SHIFT && FlxG.keys.justPressed.R)
+		if (FlxG.keys.justPressed.R)
 		{
 			isDragging = false;
 			canInteract = false;
 			currentZoom = 1;
+			FlxTween.cancelTweensOf(gameCamera.scroll);
 			FlxTween.tween(gameCamera.scroll, {x: 0, y: 0}, 0.42, {
 				ease: FlxEase.quadOut,
 				onComplete: (_) ->
